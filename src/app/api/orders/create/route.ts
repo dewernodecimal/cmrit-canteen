@@ -55,38 +55,33 @@ export async function POST(req: NextRequest) {
     );
 
     // 3. Calculate credits
-    let creditsApplied = 0;
-    if (use_credits) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('credit_balance')
-        .eq('phone', phone)
-        .single();
+    let creditsAvailable = 0;
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('credit_balance')
+      .eq('phone', phone)
+      .single();
 
-      if (profile && profile.credit_balance > 0) {
-        creditsApplied = Math.min(profile.credit_balance, totalAmount);
-      }
+    if (profile && profile.credit_balance > 0) {
+      creditsAvailable = profile.credit_balance;
     }
 
-    const amountToPay = totalAmount - creditsApplied;
-
-    // Validate UTR if payment is required
-    if (amountToPay > 0 && (!utr_number || utr_number.length !== 12)) {
-      return NextResponse.json({ error: 'Please enter a valid 12-digit UTR number' }, { status: 400 });
+    if (creditsAvailable < totalAmount) {
+      return NextResponse.json({ error: 'Insufficient credits. Please recharge at the counter.' }, { status: 400 });
     }
 
-    // 4. Create order in DB
+    // 4. Create order in DB (Instantly Confirmed)
+    const collectionCode = String(Math.floor(1000 + Math.random() * 9000));
+    
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
         phone,
-        status: amountToPay > 0 ? 'awaiting_verification' : 'confirmed',
+        status: 'confirmed',
         total_amount: totalAmount,
-        credits_used: creditsApplied,
-        utr_number: amountToPay > 0 ? utr_number : null,
-        collection_code: amountToPay <= 0
-          ? String(Math.floor(1000 + Math.random() * 9000))
-          : null,
+        credits_used: totalAmount,
+        utr_number: null,
+        collection_code: collectionCode,
       })
       .select()
       .single();
@@ -103,39 +98,13 @@ export async function POST(req: NextRequest) {
       }))
     );
 
-    // 6. If fully covered by credits, process immediately
-    if (amountToPay <= 0) {
-      // Deduct credits
-      await supabase.rpc('process_credit_payment', {
-        p_order_id: order.id,
-        p_phone: phone,
-        p_credits: creditsApplied,
-      });
+    // 6. Process credit deduction and stock decrement atomically
+    await supabase.rpc('process_credit_payment', {
+      p_order_id: order.id,
+      p_phone: phone,
+      p_credits: totalAmount,
+    });
       
-      return NextResponse.json({ order_id: order.id });
-    }
-
-    // 7. If awaiting verification, return success
-    // If credits were used partially, we deduct them NOW. 
-    // If the SMS never arrives, staff can still verify manually or cancel.
-    if (creditsApplied > 0) {
-      await supabase
-        .from('profiles')
-        .update({
-          credit_balance: Math.max(0, (await supabase.from('profiles').select('credit_balance').eq('phone', phone).single()).data?.credit_balance - creditsApplied),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('phone', phone);
-      
-      await supabase.from('transactions').insert({
-        phone,
-        order_id: order.id,
-        type: 'credit_redeemed',
-        amount: creditsApplied,
-        note: 'Credits locked for verification',
-      });
-    }
-
     return NextResponse.json({ order_id: order.id });
   } catch (err: any) {
     console.error('Create order error:', err);

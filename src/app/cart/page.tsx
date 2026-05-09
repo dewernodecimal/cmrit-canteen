@@ -21,15 +21,10 @@ export default function CartPage() {
 
   const [phoneInput, setPhoneInput] = useState(phone || '');
   const [phoneError, setPhoneError] = useState('');
-  const [useCredits, setUseCredits] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
-  const [utrNumber, setUtrNumber] = useState('');
-  const [utrError, setUtrError] = useState('');
 
-  const creditsToApply = useCredits
-    ? Math.min(creditBalance, totalAmount)
-    : 0;
+  const creditsToApply = Math.min(creditBalance, totalAmount);
   const amountToPay = totalAmount - creditsToApply;
 
   const handleCheckout = async () => {
@@ -40,14 +35,12 @@ export default function CartPage() {
     }
     setPhoneError('');
     
-    // Validate UTR if payment is required
+    // Validate credits
     if (amountToPay > 0) {
-      if (!utrNumber || utrNumber.length !== 12 || !/^\d+$/.test(utrNumber)) {
-        setUtrError('Please enter a valid 12-digit UPI Reference Number (UTR)');
-        return;
-      }
+      setError('Insufficient credits. Please recharge your wallet at the counter.');
+      return;
     }
-    setUtrError('');
+
     setPhone(phoneInput);
 
     if (items.length === 0) return;
@@ -66,8 +59,6 @@ export default function CartPage() {
             menu_item_id: i.menuItem.id,
             quantity: i.quantity,
           })),
-          use_credits: useCredits,
-          utr_number: amountToPay > 0 ? utrNumber : undefined,
         }),
       });
 
@@ -137,43 +128,38 @@ export default function CartPage() {
         />
       </Card>
 
-      {/* Credits Toggle */}
-      {creditBalance > 0 && (
+      {/* Credits Info */}
+      {creditBalance > 0 ? (
         <Card>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-emerald-400" />
-              </div>
-              <div>
-                <p className="text-sm font-medium text-white">
-                  Use Canteen Credits
-                </p>
-                <p className="text-xs text-zinc-400">
-                  Balance: {formatPrice(creditBalance)}
-                </p>
-              </div>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center">
+              <Wallet className="w-5 h-5 text-emerald-400" />
             </div>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={useCredits}
-                onChange={(e) => setUseCredits(e.target.checked)}
-                className="sr-only peer"
-              />
-              <div className="w-11 h-6 bg-surface-600 peer-focus:outline-none rounded-full peer peer-checked:bg-emerald-500 transition-colors">
-                <div
-                  className={`w-5 h-5 bg-white rounded-full shadow-lg transform transition-transform mt-0.5
-                    ${useCredits ? 'translate-x-5.5 ml-0.5' : 'translate-x-0.5'}`}
-                />
-              </div>
-            </label>
+            <div>
+              <p className="text-sm font-medium text-white">
+                Canteen Credits
+              </p>
+              <p className="text-xs text-zinc-400">
+                Available Balance: {formatPrice(creditBalance)}
+              </p>
+            </div>
           </div>
-          {useCredits && creditsToApply > 0 && (
-            <p className="text-xs text-emerald-400 mt-3 pl-13">
-              {formatPrice(creditsToApply)} credits will be applied
-            </p>
-          )}
+        </Card>
+      ) : (
+        <Card className="border-rose-500/20 bg-rose-500/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-rose-400/10 flex items-center justify-center">
+              <Wallet className="w-5 h-5 text-rose-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-white">
+                No Credits Available
+              </p>
+              <p className="text-xs text-rose-400/80">
+                Please recharge your wallet at the canteen counter.
+              </p>
+            </div>
+          </div>
         </Card>
       )}
 
@@ -208,66 +194,30 @@ export default function CartPage() {
         </div>
       )}
 
-      {/* UTR Payment Details */}
-      {amountToPay > 0 && (
-        <Card className="border-brand-500/30">
-          <div className="mb-6 text-center space-y-4">
-            <h3 className="text-lg font-semibold text-white">Payment Details</h3>
-            
-            {/* Dynamic QR Code */}
-            <div className="flex justify-center bg-white p-3 rounded-xl w-48 mx-auto">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${(amountToPay / 100).toFixed(2)}&cu=INR`)}`} 
-                alt="UPI QR Code" 
-                className="w-full h-full"
-              />
-            </div>
-            
-            <p className="text-xs text-zinc-400">
-              Scan QR code from any device, or tap the button below if paying from this phone.
-            </p>
-
-            <a 
-              href={`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${(amountToPay / 100).toFixed(2)}&cu=INR`}
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl font-medium hover:bg-emerald-500/20 transition-colors"
-            >
-              📱 Tap to Pay {formatPrice(amountToPay)} via UPI App
-            </a>
-          </div>
-
-          <div className="border-t border-white/10 pt-5 mb-1">
-            <h4 className="text-sm font-medium text-white mb-2">Step 2: Enter UTR Number</h4>
-            <p className="text-xs text-zinc-400 mb-3">
-              After successful payment, enter the 12-digit UTR/Reference number from your app.
-            </p>
-            <Input
-              placeholder="e.g. 312456789012"
-              value={utrNumber}
-              onChange={(e) => setUtrNumber(e.target.value)}
-              error={utrError}
-              maxLength={12}
-            />
-          </div>
+      {/* Pay Button / Warning */}
+      {amountToPay > 0 ? (
+        <Card className="border-brand-500/30 text-center space-y-3">
+          <p className="text-sm text-brand-400 font-medium">Insufficient Credits</p>
+          <p className="text-xs text-zinc-400">
+            You are short by {formatPrice(amountToPay)}. Visit the canteen counter and scan their QR code to recharge your account balance. 
+            (1 Rupee = 1 Credit)
+          </p>
         </Card>
+      ) : (
+        <Button
+          size="lg"
+          className="w-full"
+          onClick={handleCheckout}
+          isLoading={isProcessing}
+          icon={<ShieldCheck className="w-5 h-5" />}
+        >
+          Place Order (Deduct Credits)
+        </Button>
       )}
-
-      {/* Pay Button */}
-      <Button
-        size="lg"
-        className="w-full"
-        onClick={handleCheckout}
-        isLoading={isProcessing}
-        icon={<ShieldCheck className="w-5 h-5" />}
-      >
-        {amountToPay > 0
-          ? `Submit Order for Verification`
-          : 'Place Order (Credits)'}
-      </Button>
 
       {/* Security note */}
       <p className="text-center text-[11px] text-zinc-600">
-        Orders are processed after staff verifies your UPI payment.
+        Orders placed with credits are confirmed instantly.
       </p>
     </div>
   );

@@ -21,6 +21,11 @@ export default function StaffDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
   const [staffPin, setStaffPin] = useState('');
+  
+  // Top-up state
+  const [topUpPhone, setTopUpPhone] = useState('');
+  const [topUpAmount, setTopUpAmount] = useState('');
+  const [isToppingUp, setIsToppingUp] = useState(false);
 
   useEffect(() => {
     setStaffPin(sessionStorage.getItem('staff_pin') || '');
@@ -88,45 +93,38 @@ export default function StaffDashboard() {
     }
   };
 
-  const verifyUtr = async (orderId: string, action: 'approve' | 'reject') => {
-    setUpdating(orderId);
+  const handleTopUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsToppingUp(true);
     try {
-      await fetch('/api/orders/verify', {
+      const res = await fetch('/api/staff/credits', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'x-staff-pin': staffPin,
         },
         body: JSON.stringify({
-          order_id: orderId,
-          action,
+          phone: topUpPhone,
+          amount: parseInt(topUpAmount) * 100, // stored in paise
         }),
       });
-      fetchOrders();
+      if (res.ok) {
+        alert(`Successfully added ₹${topUpAmount} to ${topUpPhone}`);
+        setTopUpPhone('');
+        setTopUpAmount('');
+      } else {
+        const data = await res.json();
+        alert(data.error || 'Failed to add credits');
+      }
     } catch (err) {
-      console.error('Failed to verify UTR:', err);
+      alert('Failed to add credits');
     } finally {
-      setUpdating(null);
+      setIsToppingUp(false);
     }
   };
 
   const getStatusActions = (status: OrderStatus) => {
     switch (status) {
-      case 'awaiting_verification':
-        return [
-          {
-            label: 'Verify',
-            action: 'approve' as const,
-            icon: <CheckCircle2 className="w-4 h-4" />,
-            variant: 'primary' as const,
-          },
-          {
-            label: 'Reject',
-            action: 'reject' as const,
-            icon: <XCircle className="w-4 h-4" />,
-            variant: 'danger' as const,
-          },
-        ];
       case 'confirmed':
         return [
           {
@@ -166,7 +164,6 @@ export default function StaffDashboard() {
   };
 
   const statusGroups = {
-    awaiting_verification: orders.filter((o) => o.status === 'awaiting_verification'),
     confirmed: orders.filter((o) => o.status === 'confirmed'),
     in_progress: orders.filter((o) => o.status === 'in_progress'),
     ready: orders.filter((o) => o.status === 'ready'),
@@ -193,6 +190,43 @@ export default function StaffDashboard() {
         </Button>
       </div>
 
+      {/* Top Up Credits Form */}
+      <Card className="border-emerald-500/20 bg-emerald-500/5">
+        <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row items-end gap-4">
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-medium text-emerald-400 mb-1.5">Student Phone Number</label>
+            <input
+              type="tel"
+              placeholder="10-digit number"
+              value={topUpPhone}
+              onChange={(e) => setTopUpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+              className="w-full h-10 px-3 rounded-lg bg-black/40 border border-emerald-500/20 text-white focus:outline-none focus:border-emerald-500 text-sm"
+              required
+            />
+          </div>
+          <div className="flex-1 w-full">
+            <label className="block text-xs font-medium text-emerald-400 mb-1.5">Amount (₹)</label>
+            <input
+              type="number"
+              placeholder="e.g. 100"
+              value={topUpAmount}
+              onChange={(e) => setTopUpAmount(e.target.value)}
+              className="w-full h-10 px-3 rounded-lg bg-black/40 border border-emerald-500/20 text-white focus:outline-none focus:border-emerald-500 text-sm"
+              min="1"
+              required
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="primary"
+            className="w-full sm:w-auto h-10 bg-emerald-500 hover:bg-emerald-600 text-white shadow-none"
+            isLoading={isToppingUp}
+          >
+            Add Credits
+          </Button>
+        </form>
+      </Card>
+
       {/* Empty state */}
       {orders.length === 0 && !isLoading && (
         <div className="text-center py-16">
@@ -205,29 +239,7 @@ export default function StaffDashboard() {
       )}
 
       {/* Order columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 overflow-x-auto">
-        {/* Awaiting Verification */}
-        <div className="min-w-[250px]">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-purple-400" />
-            <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-              Verify UTR ({statusGroups.awaiting_verification.length})
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {statusGroups.awaiting_verification.map((order) => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                actions={getStatusActions(order.status)}
-                onAction={updateStatus}
-                onVerify={verifyUtr}
-                isUpdating={updating === order.id}
-              />
-            ))}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-x-auto">
         {/* Confirmed */}
         <div className="min-w-[250px]">
           <div className="flex items-center gap-2 mb-4">
@@ -243,7 +255,6 @@ export default function StaffDashboard() {
                 order={order}
                 actions={getStatusActions(order.status)}
                 onAction={updateStatus}
-                onVerify={verifyUtr}
                 isUpdating={updating === order.id}
               />
             ))}
@@ -265,7 +276,6 @@ export default function StaffDashboard() {
                 order={order}
                 actions={getStatusActions(order.status)}
                 onAction={updateStatus}
-                onVerify={verifyUtr}
                 isUpdating={updating === order.id}
               />
             ))}
@@ -287,7 +297,6 @@ export default function StaffDashboard() {
                 order={order}
                 actions={getStatusActions(order.status)}
                 onAction={updateStatus}
-                onVerify={verifyUtr}
                 isUpdating={updating === order.id}
               />
             ))}
