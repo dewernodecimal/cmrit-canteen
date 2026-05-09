@@ -115,18 +115,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ order_id: order.id });
     }
 
-    // 7. Auto-verify the UTR immediately!
-    // Since we trust the student and verify at the counter using the last 4 digits.
-    const { data: verifyData, error: verifyError } = await supabase.rpc('process_confirmed_payment', {
-      p_order_id: order.id,
-    });
-
-    if (verifyError || !verifyData?.success) {
-      // If stock failed, process_confirmed_payment already cancelled it and refunded credits
-      return NextResponse.json({ error: verifyData?.error || 'Failed to auto-verify order' }, { status: 400 });
-    }
-
-    // If partial credits were used, deduct them now since the order is confirmed
+    // 7. If awaiting verification, return success
+    // If credits were used partially, we deduct them NOW. 
+    // If the SMS never arrives, staff can still verify manually or cancel.
     if (creditsApplied > 0) {
       await supabase
         .from('profiles')
@@ -141,7 +132,7 @@ export async function POST(req: NextRequest) {
         order_id: order.id,
         type: 'credit_redeemed',
         amount: creditsApplied,
-        note: 'Credits used alongside UTR payment',
+        note: 'Credits locked for verification',
       });
     }
 
