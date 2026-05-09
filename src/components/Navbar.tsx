@@ -3,16 +3,18 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, UtensilsCrossed, Wallet } from 'lucide-react';
+import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
 import { formatPrice } from '@/lib/constants';
 import CartDrawer from '@/components/cart/CartDrawer';
+import AuthModal from '@/components/AuthModal';
 
 export default function Navbar() {
   const [cartOpen, setCartOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
   const { totalItems } = useCart();
-  const { phone, creditBalance } = usePhone();
+  const { phone, creditBalance, isLoggedIn, logout } = usePhone();
   const pathname = usePathname();
 
   // Don't show navbar on staff pages
@@ -36,15 +38,43 @@ export default function Navbar() {
             </Link>
 
             {/* Right side */}
-            <div className="flex items-center gap-3">
-              {/* Credits badge */}
-              {phone && creditBalance > 0 && (
-                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/20">
-                  <Wallet className="w-3.5 h-3.5 text-emerald-400" />
-                  <span className="text-xs font-semibold text-emerald-400">
-                    {formatPrice(creditBalance)}
-                  </span>
-                </div>
+            <div className="flex items-center gap-2">
+              {isLoggedIn && phone ? (
+                <>
+                  {/* Wallet balance */}
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-400/10 border border-emerald-400/20">
+                    <Wallet className="w-3.5 h-3.5 text-emerald-400" />
+                    <span className="text-xs font-semibold text-emerald-400">
+                      {formatPrice(creditBalance)}
+                    </span>
+                  </div>
+
+                  {/* Add Credits link */}
+                  <Link
+                    href="/wallet"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-xs font-medium text-brand-400 hover:bg-brand-500/20 transition-colors"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Add Credits</span>
+                  </Link>
+
+                  {/* Logout */}
+                  <button
+                    onClick={logout}
+                    title="Logout"
+                    className="p-2 rounded-xl glass-light hover:bg-surface-600 transition-colors text-zinc-400 hover:text-white"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setAuthOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-xs font-medium text-brand-400 hover:bg-brand-500/20 transition-colors"
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  Login / Register
+                </button>
               )}
 
               {/* Cart button */}
@@ -65,6 +95,7 @@ export default function Navbar() {
       </nav>
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
     </>
   );
 }
