@@ -50,6 +50,25 @@
   scrollbar-color: var(--color-surface-500) transparent;
 }
 
+/* Better visible scrollbar for Chrome/Edge on Windows */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-surface-500);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-surface-400);
+}
+
 html {
   scroll-behavior: smooth;
 }
