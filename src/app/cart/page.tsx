@@ -218,7 +218,7 @@ export default function CartPage() {
             <div className="flex justify-center bg-white p-3 rounded-xl w-48 mx-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${amountToPay}&cu=INR`)}`} 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${(amountToPay / 100).toFixed(2)}&cu=INR`)}`} 
                 alt="UPI QR Code" 
                 className="w-full h-full"
               />
@@ -229,7 +229,7 @@ export default function CartPage() {
             </p>
 
             <a 
-              href={`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${amountToPay}&cu=INR`}
+              href={`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${(amountToPay / 100).toFixed(2)}&cu=INR`}
               className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl font-medium hover:bg-emerald-500/20 transition-colors"
             >
               📱 Tap to Pay {formatPrice(amountToPay)} via UPI App
