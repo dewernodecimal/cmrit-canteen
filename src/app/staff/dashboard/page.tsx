@@ -116,13 +116,13 @@ export default function StaffDashboard() {
         return [
           {
             label: 'Verify',
-            action: 'approve',
+            action: 'approve' as const,
             icon: <CheckCircle2 className="w-4 h-4" />,
             variant: 'primary' as const,
           },
           {
             label: 'Reject',
-            action: 'reject',
+            action: 'reject' as const,
             icon: <XCircle className="w-4 h-4" />,
             variant: 'danger' as const,
           },

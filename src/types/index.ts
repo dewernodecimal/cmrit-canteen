@@ -6,6 +6,7 @@ export type ItemCategory = 'snacks' | 'meals' | 'beverages' | 'desserts';
 
 export type OrderStatus =
   | 'pending_payment'
+  | 'awaiting_verification'
   | 'confirmed'
   | 'in_progress'
   | 'ready'
@@ -51,6 +52,7 @@ export interface Order {
   status: OrderStatus;
   total_amount: number; // in paise
   credits_used: number;
+  utr_number: string | null;
   razorpay_order_id: string | null;
   razorpay_payment_id: string | null;
   created_at: string;
