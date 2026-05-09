@@ -12,11 +12,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import { formatPrice } from '@/lib/constants';
 
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
+import Input from '@/components/ui/Input';
 
 export default function CartPage() {
   const router = useRouter();
@@ -28,6 +24,8 @@ export default function CartPage() {
   const [useCredits, setUseCredits] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [utrNumber, setUtrNumber] = useState('');
+  const [utrError, setUtrError] = useState('');
 
   const creditsToApply = useCredits
     ? Math.min(creditBalance, totalAmount)
@@ -41,6 +39,15 @@ export default function CartPage() {
       return;
     }
     setPhoneError('');
+    
+    // Validate UTR if payment is required
+    if (amountToPay > 0) {
+      if (!utrNumber || utrNumber.length !== 12 || !/^\d+$/.test(utrNumber)) {
+        setUtrError('Please enter a valid 12-digit UPI Reference Number (UTR)');
+        return;
+      }
+    }
+    setUtrError('');
     setPhone(phoneInput);
 
     if (items.length === 0) return;
@@ -49,8 +56,8 @@ export default function CartPage() {
     setError('');
 
     try {
-      // 1. Create order on server
-      const res = await fetch('/api/razorpay/create-order', {
+      // Create order on server
+      const res = await fetch('/api/orders/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -60,6 +67,7 @@ export default function CartPage() {
             quantity: i.quantity,
           })),
           use_credits: useCredits,
+          utr_number: amountToPay > 0 ? utrNumber : undefined,
         }),
       });
 
@@ -69,49 +77,9 @@ export default function CartPage() {
         throw new Error(data.error || 'Failed to create order');
       }
 
-      // 2. If amount is 0 (fully covered by credits), order is auto-confirmed
-      if (data.amount_to_pay === 0) {
-        clearCart();
-        router.push(`/order/${data.order_id}`);
-        return;
-      }
-
-      // 3. Open Razorpay checkout
-      const script = document.createElement('script');
-      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-      script.async = true;
-      document.body.appendChild(script);
-
-      script.onload = () => {
-        const options = {
-          key: data.key_id,
-          amount: data.amount_to_pay,
-          currency: 'INR',
-          name: 'CMRIT Canteen',
-          description: `Order - ${items.length} items`,
-          order_id: data.razorpay_order_id,
-          handler: function () {
-            // Payment success — webhook will confirm server-side
-            clearCart();
-            router.push(`/order/${data.order_id}`);
-          },
-          prefill: {
-            contact: `+91${phoneInput}`,
-          },
-          theme: {
-            color: '#f97316',
-            backdrop_color: 'rgba(0,0,0,0.7)',
-          },
-          modal: {
-            ondismiss: () => {
-              setIsProcessing(false);
-            },
-          },
-        };
-
-        const rzp = new window.Razorpay(options);
-        rzp.open();
-      };
+      // Order created successfully (either confirmed via credits or awaiting verification)
+      clearCart();
+      router.push(`/order/${data.order_id}`);
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
       setIsProcessing(false);
@@ -240,29 +208,41 @@ export default function CartPage() {
         </div>
       )}
 
+      {/* UTR Payment Details */}
+      {amountToPay > 0 && (
+        <Card className="border-brand-500/30">
+          <div className="mb-4 text-center">
+            <h3 className="text-sm font-semibold text-white mb-1">Pay via any UPI App</h3>
+            <p className="text-xs text-zinc-400">
+              Scan the QR code at the counter to pay {formatPrice(amountToPay)}, then enter your 12-digit UTR below.
+            </p>
+          </div>
+          <Input
+            placeholder="Enter 12-digit UTR/Ref No."
+            value={utrNumber}
+            onChange={(e) => setUtrNumber(e.target.value)}
+            error={utrError}
+            maxLength={12}
+          />
+        </Card>
+      )}
+
       {/* Pay Button */}
       <Button
         size="lg"
         className="w-full"
         onClick={handleCheckout}
         isLoading={isProcessing}
-        icon={
-          amountToPay > 0 ? (
-            <CreditCard className="w-5 h-5" />
-          ) : (
-            <ShieldCheck className="w-5 h-5" />
-          )
-        }
+        icon={<ShieldCheck className="w-5 h-5" />}
       >
         {amountToPay > 0
-          ? `Pay ${formatPrice(amountToPay)}`
+          ? `Submit Order for Verification`
           : 'Place Order (Credits)'}
       </Button>
 
       {/* Security note */}
-      <p className="text-center text-[11px] text-zinc-600 flex items-center justify-center gap-1">
-        <ShieldCheck className="w-3 h-3" />
-        Payments secured by Razorpay. We never store card details.
+      <p className="text-center text-[11px] text-zinc-600">
+        Orders are processed after staff verifies your UPI payment.
       </p>
     </div>
   );

@@ -24,6 +24,11 @@ export const ORDER_STATUS_CONFIG: Record<
     color: 'text-amber-400',
     bgColor: 'bg-amber-400/10',
   },
+  awaiting_verification: {
+    label: 'Verifying UTR...',
+    color: 'text-purple-400',
+    bgColor: 'bg-purple-400/10',
+  },
   confirmed: {
     label: 'Order Confirmed',
     color: 'text-sky-400',

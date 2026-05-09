@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
     const { data, error } = await supabase
       .from('orders')
       .select(`*, order_items(*)`)
-      .in('status', ['confirmed', 'in_progress', 'ready'])
+      .in('status', ['awaiting_verification', 'confirmed', 'in_progress', 'ready'])
       .order('created_at', { ascending: true });
 
     if (error) throw error;
