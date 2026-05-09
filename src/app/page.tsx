@@ -1,65 +1,113 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import Link from 'next/link';
+import { ArrowRight, Scan, ShoppingBag, CreditCard, Package } from 'lucide-react';
+import Button from '@/components/ui/Button';
+
+const steps = [
+  {
+    icon: <Scan className="w-6 h-6" />,
+    title: 'Scan QR Code',
+    description: 'Scan the QR code on any canteen poster with your phone camera',
+  },
+  {
+    icon: <ShoppingBag className="w-6 h-6" />,
+    title: 'Browse & Add',
+    description: 'Pick your favorites from the live menu with real-time stock levels',
+  },
+  {
+    icon: <CreditCard className="w-6 h-6" />,
+    title: 'Pay Instantly',
+    description: 'Pay via UPI, cards, or use your Canteen Credits — no sign-up needed',
+  },
+  {
+    icon: <Package className="w-6 h-6" />,
+    title: 'Pick Up',
+    description: 'Show your 4-digit code at the counter and grab your food',
+  },
+];
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-[calc(100vh-4rem)]">
+      {/* Hero Section */}
+      <section className="relative overflow-hidden">
+        {/* Background gradient blobs */}
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-brand-600/8 rounded-full blur-3xl" />
+
+        <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
+          <div className="text-center space-y-6 animate-slide-up">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-sm text-brand-400 font-medium">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              Canteen is open
+            </div>
+
+            {/* Heading */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
+              Skip the Queue. <br />
+              <span className="gradient-text">Order from Your Phone.</span>
+            </h1>
+
+            {/* Subtitle */}
+            <p className="text-lg text-zinc-400 max-w-xl mx-auto leading-relaxed">
+              No app to download, no account to create. Just scan, pick, pay, and eat.
+              Your lunch break just got{' '}
+              <span className="text-brand-400 font-semibold">30 minutes shorter</span>.
+            </p>
+
+            {/* CTA */}
+            <div className="flex justify-center pt-4">
+              <Link href="/menu">
+                <Button size="lg" icon={<ArrowRight className="w-5 h-5" />}>
+                  Browse Menu
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+        <h2 className="text-2xl font-bold text-white text-center mb-12">
+          How It Works
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
+          {steps.map((step, idx) => (
+            <div
+              key={step.title}
+              className="glass rounded-[var(--radius-card)] p-6 text-center group hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 transition-all duration-300"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+              {/* Step number */}
+              <div className="text-xs font-mono text-brand-500/60 mb-3">
+                0{idx + 1}
+              </div>
+              {/* Icon */}
+              <div className="w-14 h-14 rounded-2xl gradient-brand mx-auto flex items-center justify-center mb-4 shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+                <span className="text-white">{step.icon}</span>
+              </div>
+              {/* Text */}
+              <h3 className="text-base font-semibold text-white mb-2">
+                {step.title}
+              </h3>
+              <p className="text-sm text-zinc-400 leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/5 py-8">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+          <p className="text-xs text-zinc-600">
+            Built for CMRIT students · Powered by Razorpay &amp; Supabase
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }
