@@ -211,19 +211,44 @@ export default function CartPage() {
       {/* UTR Payment Details */}
       {amountToPay > 0 && (
         <Card className="border-brand-500/30">
-          <div className="mb-4 text-center">
-            <h3 className="text-sm font-semibold text-white mb-1">Pay via any UPI App</h3>
+          <div className="mb-6 text-center space-y-4">
+            <h3 className="text-lg font-semibold text-white">Payment Details</h3>
+            
+            {/* Dynamic QR Code */}
+            <div className="flex justify-center bg-white p-3 rounded-xl w-48 mx-auto">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img 
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${amountToPay}&cu=INR`)}`} 
+                alt="UPI QR Code" 
+                className="w-full h-full"
+              />
+            </div>
+            
             <p className="text-xs text-zinc-400">
-              Scan the QR code at the counter to pay {formatPrice(amountToPay)}, then enter your 12-digit UTR below.
+              Scan QR code from any device, or tap the button below if paying from this phone.
             </p>
+
+            <a 
+              href={`upi://pay?pa=vedantgurav2718@okhdfcbank&pn=CMRIT%20Canteen&am=${amountToPay}&cu=INR`}
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-xl font-medium hover:bg-emerald-500/20 transition-colors"
+            >
+              📱 Tap to Pay {formatPrice(amountToPay)} via UPI App
+            </a>
           </div>
-          <Input
-            placeholder="Enter 12-digit UTR/Ref No."
-            value={utrNumber}
-            onChange={(e) => setUtrNumber(e.target.value)}
-            error={utrError}
-            maxLength={12}
-          />
+
+          <div className="border-t border-white/10 pt-5 mb-1">
+            <h4 className="text-sm font-medium text-white mb-2">Step 2: Enter UTR Number</h4>
+            <p className="text-xs text-zinc-400 mb-3">
+              After successful payment, enter the 12-digit UTR/Reference number from your app.
+            </p>
+            <Input
+              placeholder="e.g. 312456789012"
+              value={utrNumber}
+              onChange={(e) => setUtrNumber(e.target.value)}
+              error={utrError}
+              maxLength={12}
+            />
+          </div>
         </Card>
       )}
 
