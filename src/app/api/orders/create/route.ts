@@ -90,44 +90,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
     }
 
-    // 5. Fetch menu items to get correct prices and names
-    const itemIds = orderItems.map((i: any) => i.menu_item_id);
-    const { data: menuItemsData } = await supabase
-      .from('menu_items')
-      .select('id, name, price')
-      .in('id', itemIds);
-
-    if (!menuItemsData) {
-      return NextResponse.json({ error: 'Failed to fetch item details' }, { status: 500 });
-    }
-
-    // 6. Insert order items with prices and names
-    const itemsToInsert = orderItems.map((item: any) => {
-      const details = menuItemsData.find((m) => m.id === item.menu_item_id);
-      return {
+    // 5. Insert order items
+    const { error: itemsError } = await supabase.from('order_items').insert(
+      orderItems.map((item: any) => ({
+        ...item,
         order_id: order.id,
-        menu_item_id: item.menu_item_id,
-        quantity: item.quantity,
-        unit_price: details?.price || 0,
-        item_name: details?.name || 'Unknown Item',
-      };
-    });
-
-    const { error: itemsError } = await supabase.from('order_items').insert(itemsToInsert);
+      }))
+    );
 
     if (itemsError) {
       console.error('Items insert error:', itemsError);
+      await supabase.from('orders').delete().eq('id', order.id);
       return NextResponse.json({ error: 'Failed to add items to order' }, { status: 500 });
     }
 
-    // 7. Process credit deduction and stock decrement atomically
-    await supabase.rpc('process_credit_payment', {
+    // 6. Process credit deduction and stock decrement atomically
+    const { data: result, error: rpcError } = await supabase.rpc('process_credit_payment', {
       p_order_id: order.id,
       p_phone: phone,
       p_credits: totalAmount,
     });
-      
+
+    if (rpcError || !result?.success) {
+      console.error('Payment error:', rpcError || result?.error);
+      // Rollback: delete the order if payment failed
+      await supabase.from('orders').delete().eq('id', order.id);
+      return NextResponse.json({ 
+        error: result?.error || 'Payment failed. Please check your credit balance.' 
+      }, { status: 400 });
+    }
+
     return NextResponse.json({ order_id: order.id });
+
   } catch (err: any) {
     console.error('Create order error:', err);
     return NextResponse.json(

@@ -186,23 +186,35 @@ $$;
 
 
 -- ============================================================
--- RPC: Process credit-only payment
+-- RPC: Process credit-only payment (Atomically)
 -- ============================================================
 CREATE OR REPLACE FUNCTION process_credit_payment(
   p_order_id UUID,
   p_phone TEXT,
   p_credits INTEGER
 )
-RETURNS VOID
+RETURNS JSONB
 LANGUAGE plpgsql
 AS $$
 DECLARE
   v_item RECORD;
+  v_current_balance INTEGER;
 BEGIN
-  -- Decrement stock for each item
+  -- 1. Lock and check profile balance
+  SELECT credit_balance INTO v_current_balance
+  FROM profiles
+  WHERE phone = p_phone
+  FOR UPDATE;
+
+  IF v_current_balance < p_credits THEN
+    RETURN jsonb_build_object('success', false, 'error', 'Insufficient credits');
+  END IF;
+
+  -- 2. Check and decrement stock for each item
   FOR v_item IN
-    SELECT oi.menu_item_id, oi.quantity
+    SELECT oi.menu_item_id, oi.quantity, mi.name
     FROM order_items oi
+    JOIN menu_items mi ON mi.id = oi.menu_item_id
     WHERE oi.order_id = p_order_id
   LOOP
     UPDATE menu_items
@@ -210,19 +222,26 @@ BEGIN
         updated_at = now()
     WHERE id = v_item.menu_item_id
       AND current_stock >= v_item.quantity;
+
+    IF NOT FOUND THEN
+      RETURN jsonb_build_object('success', false, 'error', 'Out of stock: ' || v_item.name);
+    END IF;
   END LOOP;
 
-  -- Deduct credits
+  -- 3. Deduct credits
   UPDATE profiles
   SET credit_balance = credit_balance - p_credits,
       updated_at = now()
   WHERE phone = p_phone;
 
-  -- Log transaction
+  -- 4. Log transaction
   INSERT INTO transactions (phone, order_id, type, amount, note)
   VALUES (p_phone, p_order_id, 'credit_redeemed', p_credits, 'Credits used at checkout');
+
+  RETURN jsonb_build_object('success', true);
 END;
 $$;
+
 
 
 -- ============================================================
