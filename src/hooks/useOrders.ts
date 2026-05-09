@@ -96,9 +96,11 @@ export function useOrder(orderId: string) {
     fetchOrder();
   }, [fetchOrder]);
 
-  // Real-time subscription for this order
+  // Real-time subscription and fallback polling
   useEffect(() => {
     const supabase = createClient();
+    
+    // Real-time WebSocket
     const channel = supabase
       .channel(`order-${orderId}`)
       .on(
@@ -117,10 +119,16 @@ export function useOrder(orderId: string) {
       )
       .subscribe();
 
+    // Fallback polling (every 5 seconds) just in case WebSockets fail
+    const pollInterval = setInterval(() => {
+      fetchOrder();
+    }, 5000);
+
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(pollInterval);
     };
-  }, [orderId]);
+  }, [orderId, fetchOrder]);
 
   return { order, isLoading, refetch: fetchOrder };
 }
