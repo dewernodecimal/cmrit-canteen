@@ -112,21 +112,6 @@ export default function StaffDashboard() {
 
   const getStatusActions = (status: OrderStatus) => {
     switch (status) {
-      case 'awaiting_verification':
-        return [
-          {
-            label: 'Verify',
-            action: 'approve' as const,
-            icon: <CheckCircle2 className="w-4 h-4" />,
-            variant: 'primary' as const,
-          },
-          {
-            label: 'Reject',
-            action: 'reject' as const,
-            icon: <XCircle className="w-4 h-4" />,
-            variant: 'danger' as const,
-          },
-        ];
       case 'confirmed':
         return [
           {
@@ -205,29 +190,7 @@ export default function StaffDashboard() {
       )}
 
       {/* Order columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 overflow-x-auto">
-        {/* Awaiting Verification */}
-        <div className="min-w-[250px]">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-purple-400" />
-            <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-              Verify UTR ({statusGroups.awaiting_verification.length})
-            </h2>
-          </div>
-          <div className="space-y-3">
-            {statusGroups.awaiting_verification.map((order) => (
-              <OrderCard
-                key={order.id}
-                order={order}
-                actions={getStatusActions(order.status)}
-                onAction={updateStatus}
-                onVerify={verifyUtr}
-                isUpdating={updating === order.id}
-              />
-            ))}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-x-auto">
         {/* Confirmed */}
         <div className="min-w-[250px]">
           <div className="flex items-center gap-2 mb-4">

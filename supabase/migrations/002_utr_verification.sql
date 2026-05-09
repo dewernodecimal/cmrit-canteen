@@ -68,7 +68,11 @@ BEGIN
     END IF;
   END LOOP;
 
-  v_collection_code := lpad(floor(random() * 10000)::text, 4, '0');
+  IF v_order.utr_number IS NOT NULL THEN
+    v_collection_code := right(v_order.utr_number, 4);
+  ELSE
+    v_collection_code := lpad(floor(random() * 10000)::text, 4, '0');
+  END IF;
 
   UPDATE orders
   SET status = 'confirmed',
