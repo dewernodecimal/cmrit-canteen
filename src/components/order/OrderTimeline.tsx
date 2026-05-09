@@ -7,7 +7,7 @@ interface OrderTimelineProps {
 }
 
 const steps: { status: OrderStatus; icon: React.ReactNode; label: string }[] = [
-  { status: 'pending_payment', icon: <CreditCard className="w-4 h-4" />, label: 'Payment' },
+  { status: 'awaiting_verification', icon: <CreditCard className="w-4 h-4" />, label: 'Verifying' },
   { status: 'confirmed', icon: <Clock className="w-4 h-4" />, label: 'Confirmed' },
   { status: 'in_progress', icon: <ChefHat className="w-4 h-4" />, label: 'Preparing' },
   { status: 'ready', icon: <Package className="w-4 h-4" />, label: 'Ready' },
@@ -15,7 +15,7 @@ const steps: { status: OrderStatus; icon: React.ReactNode; label: string }[] = [
 ];
 
 const statusOrder: OrderStatus[] = [
-  'pending_payment',
+  'awaiting_verification',
   'confirmed',
   'in_progress',
   'ready',
