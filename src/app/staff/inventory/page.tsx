@@ -82,8 +82,8 @@ export default function InventoryPage() {
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-white">Inventory</h1>
-          <p className="text-sm text-zinc-400 mt-0.5">
+          <h1 className="text-2xl font-black text-text-primary tracking-tight">Inventory</h1>
+          <p className="text-sm text-text-secondary mt-0.5 font-medium">
             Manage stock levels and availability
           </p>
         </div>
@@ -91,6 +91,7 @@ export default function InventoryPage() {
           <Button
             variant="secondary"
             size="sm"
+            className="font-bold"
             icon={<RefreshCw className="w-4 h-4" />}
             onClick={fetchItems}
           >
@@ -99,6 +100,7 @@ export default function InventoryPage() {
           <Button
             variant="danger"
             size="sm"
+            className="font-bold"
             icon={<RotateCcw className="w-4 h-4" />}
             onClick={resetAllStock}
             isLoading={resetting}
@@ -119,16 +121,16 @@ export default function InventoryPage() {
             <Card key={item.id} padding="sm">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-semibold text-white truncate">
+                  <h3 className="text-sm font-bold text-text-primary truncate uppercase tracking-tight">
                     {item.name}
                   </h3>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-text-secondary font-medium">
                       {CATEGORY_CONFIG[item.category]?.emoji}{' '}
                       {CATEGORY_CONFIG[item.category]?.label}
                     </span>
-                    <span className="text-xs text-zinc-500">·</span>
-                    <span className="text-xs text-brand-400 font-medium">
+                    <span className="text-xs text-text-secondary">·</span>
+                    <span className="text-xs text-brand-600 font-bold">
                       {formatPrice(item.price)}
                     </span>
                   </div>
@@ -141,8 +143,8 @@ export default function InventoryPage() {
                   }
                   className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
                     item.is_available
-                      ? 'bg-emerald-400/10 text-emerald-400 hover:bg-emerald-400/20'
-                      : 'bg-rose-400/10 text-rose-400 hover:bg-rose-400/20'
+                      ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                      : 'bg-rose-50 text-rose-600 hover:bg-rose-100'
                   }`}
                   title={item.is_available ? 'Hide item' : 'Show item'}
                 >
@@ -156,28 +158,28 @@ export default function InventoryPage() {
 
               {/* Stock bar */}
               <div className="space-y-2">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="text-zinc-400">Stock</span>
+                <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                  <span className="text-text-secondary">Stock Status</span>
                   <span
                     className={
                       isOut
-                        ? 'text-rose-400'
+                        ? 'text-rose-600'
                         : isLow
-                        ? 'text-amber-400'
-                        : 'text-emerald-400'
+                        ? 'text-amber-600'
+                        : 'text-emerald-600'
                     }
                   >
                     {item.current_stock} / {item.daily_stock_cap}
                   </span>
                 </div>
-                <div className="h-2 rounded-full bg-surface-600 overflow-hidden">
+                <div className="h-2 rounded-full bg-surface-700 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-500 ${
                       isOut
                         ? 'bg-rose-500'
                         : isLow
-                        ? 'bg-amber-400'
-                        : 'bg-emerald-400'
+                        ? 'bg-amber-500'
+                        : 'bg-emerald-500'
                     }`}
                     style={{ width: `${Math.max(stockPercent, 0)}%` }}
                   />
@@ -185,14 +187,14 @@ export default function InventoryPage() {
               </div>
 
               {/* Quick stock adjust */}
-              <div className="flex items-center gap-2 mt-3">
+              <div className="flex items-center gap-2 mt-4">
                 <button
                   onClick={() =>
                     updateItem(item.id, {
                       current_stock: Math.max(0, item.current_stock - 10),
                     })
                   }
-                  className="px-2 py-1 rounded-md bg-surface-600 text-zinc-400 text-xs hover:bg-surface-500 hover:text-white transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-surface-700 text-text-secondary text-xs font-bold hover:bg-surface-600 hover:text-text-primary transition-colors cursor-pointer"
                 >
                   -10
                 </button>
@@ -202,7 +204,7 @@ export default function InventoryPage() {
                       current_stock: Math.max(0, item.current_stock - 1),
                     })
                   }
-                  className="px-2 py-1 rounded-md bg-surface-600 text-zinc-400 text-xs hover:bg-surface-500 hover:text-white transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-surface-700 text-text-secondary text-xs font-bold hover:bg-surface-600 hover:text-text-primary transition-colors cursor-pointer"
                 >
                   -1
                 </button>
@@ -216,7 +218,7 @@ export default function InventoryPage() {
                       ),
                     })
                   }
-                  className="px-2 py-1 rounded-md bg-surface-600 text-zinc-400 text-xs hover:bg-surface-500 hover:text-white transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-surface-700 text-text-secondary text-xs font-bold hover:bg-surface-600 hover:text-text-primary transition-colors cursor-pointer"
                 >
                   +1
                 </button>
@@ -229,7 +231,7 @@ export default function InventoryPage() {
                       ),
                     })
                   }
-                  className="px-2 py-1 rounded-md bg-surface-600 text-zinc-400 text-xs hover:bg-surface-500 hover:text-white transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-surface-700 text-text-secondary text-xs font-bold hover:bg-surface-600 hover:text-text-primary transition-colors cursor-pointer"
                 >
                   +10
                 </button>
@@ -239,12 +241,13 @@ export default function InventoryPage() {
                       current_stock: item.daily_stock_cap,
                     })
                   }
-                  className="px-2 py-1 rounded-md bg-brand-500/10 text-brand-400 text-xs hover:bg-brand-500/20 transition-colors cursor-pointer"
+                  className="px-2.5 py-1 rounded-lg bg-brand-500 text-white text-xs font-black uppercase tracking-tighter hover:bg-brand-600 transition-colors cursor-pointer shadow-lg shadow-brand-500/10"
                   title="Reset to daily cap"
                 >
                   Max
                 </button>
               </div>
+
             </Card>
           );
         })}

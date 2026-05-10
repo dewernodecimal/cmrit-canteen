@@ -50,10 +50,10 @@ export default function AuthModal({ onClose }: AuthModalProps) {
           <div className="w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center shadow-xl shadow-brand-500/20 mb-4">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-black text-white tracking-tight">
+          <h2 className="text-2xl font-black text-text-primary tracking-tight">
             CMRIT <span className="text-brand-500">Bites</span>
           </h2>
-          <p className="text-sm text-zinc-400 mt-1">
+          <p className="text-sm text-text-secondary mt-1">
             {mode === 'login' ? 'Welcome back! Login to order.' : 'Join the fastest canteen experience.'}
           </p>
         </div>
@@ -62,15 +62,15 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Phone */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Phone Number</label>
+            <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Phone Number</label>
             <div className="relative">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
               <input
                 type="tel"
                 placeholder="10-digit number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-800 border border-white/5 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500/50 focus:bg-surface-700 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-700 border border-surface-600 text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-500/50 focus:bg-surface-600 transition-all text-base"
                 required
               />
             </div>
@@ -78,17 +78,17 @@ export default function AuthModal({ onClose }: AuthModalProps) {
 
           {/* Password */}
           <div>
-            <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+            <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">
               {mode === 'register' ? 'Set a Password' : 'Password'}
             </label>
             <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-text-secondary" />
               <input
                 type="password"
                 placeholder={mode === 'register' ? 'Min. 4 characters' : 'Enter your password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-800 border border-white/5 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500/50 focus:bg-surface-700 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-700 border border-surface-600 text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-500/50 focus:bg-surface-600 transition-all text-base"
                 required
               />
             </div>
@@ -97,7 +97,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
 
           {/* Error */}
           {error && (
-            <p className="text-xs text-rose-400 bg-rose-400/10 border border-rose-400/20 rounded-lg px-3 py-2">
+            <p className="text-xs text-rose-600 bg-rose-50 border border-rose-100 rounded-lg px-3 py-2">
               {error}
             </p>
           )}
@@ -115,15 +115,16 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         </form>
 
         {/* Toggle mode */}
-        <p className="text-center text-xs text-zinc-500 mt-4">
+        <p className="text-center text-xs text-text-secondary mt-4">
           {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
           <button
             onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
-            className="text-brand-400 hover:text-brand-300 font-medium transition-colors"
+            className="text-brand-500 hover:text-brand-600 font-bold transition-colors"
           >
             {mode === 'login' ? 'Register' : 'Login'}
           </button>
         </p>
+
       </div>
     </div>
   );

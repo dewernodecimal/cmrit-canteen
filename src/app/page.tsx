@@ -46,16 +46,17 @@ export default function HomePage() {
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-text-primary leading-[1.1] tracking-tight">
               Craving something? <br />
               <span className="gradient-text">CMRIT Bites.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
               The fastest way to grab a meal. Skip the long lines at the counter. 
-              Order, pay with <span className="text-white font-bold">Bites Credits</span>, and pick up in style.
+              Order, pay with <span className="text-brand-500 font-bold">Bites Credits</span>, and pick up in style.
             </p>
+
 
 
             {/* CTA */}
@@ -72,7 +73,7 @@ export default function HomePage() {
 
       {/* How It Works */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <h2 className="text-2xl font-bold text-white text-center mb-12">
+        <h2 className="text-2xl font-bold text-text-primary text-center mb-12">
           How It Works
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 stagger-children">
@@ -86,14 +87,14 @@ export default function HomePage() {
                 0{idx + 1}
               </div>
               {/* Icon */}
-              <div className="w-14 h-14 rounded-2xl gradient-brand mx-auto flex items-center justify-center mb-4 shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+              <div className="w-14 h-14 rounded-2xl gradient-brand mx-auto flex items-center justify-center mb-4 shadow-lg shadow-brand-500/10 group-hover:shadow-brand-500/20 transition-shadow">
                 <span className="text-white">{step.icon}</span>
               </div>
               {/* Text */}
-              <h3 className="text-base font-semibold text-white mb-2">
+              <h3 className="text-base font-semibold text-text-primary mb-2">
                 {step.title}
               </h3>
-              <p className="text-sm text-zinc-400 leading-relaxed">
+              <p className="text-sm text-text-secondary leading-relaxed">
                 {step.description}
               </p>
             </div>
@@ -101,15 +102,17 @@ export default function HomePage() {
         </div>
       </section>
 
+
       {/* Footer */}
-      <footer className="border-t border-white/5 py-12">
+      <footer className="border-t border-black/5 py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <h3 className="text-lg font-black text-white/20 mb-4 tracking-widest uppercase">CMRIT Bites</h3>
-          <p className="text-[10px] text-zinc-700 uppercase tracking-widest font-bold">
+          <h3 className="text-lg font-black text-text-primary/10 mb-4 tracking-widest uppercase">CMRIT Bites</h3>
+          <p className="text-[10px] text-text-secondary uppercase tracking-widest font-bold">
             Built for the CMRIT Community · © 2026
           </p>
         </div>
       </footer>
+
 
     </div>
   );

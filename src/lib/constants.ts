@@ -22,40 +22,41 @@ export const ORDER_STATUS_CONFIG: Record<
 > = {
   pending_payment: {
     label: 'Awaiting Payment',
-    color: 'text-amber-400',
-    bgColor: 'bg-amber-400/10',
+    color: 'text-amber-700',
+    bgColor: 'bg-amber-50',
   },
   awaiting_verification: {
     label: 'Verifying UTR...',
-    color: 'text-purple-400',
-    bgColor: 'bg-purple-400/10',
+    color: 'text-purple-700',
+    bgColor: 'bg-purple-50',
   },
   confirmed: {
     label: 'Order Confirmed',
-    color: 'text-sky-400',
-    bgColor: 'bg-sky-400/10',
+    color: 'text-sky-700',
+    bgColor: 'bg-sky-50',
   },
   in_progress: {
     label: 'Being Prepared',
-    color: 'text-brand-400',
-    bgColor: 'bg-brand-400/10',
+    color: 'text-brand-600',
+    bgColor: 'bg-brand-50',
   },
   ready: {
     label: 'Ready for Pickup!',
-    color: 'text-emerald-400',
-    bgColor: 'bg-emerald-400/10',
+    color: 'text-emerald-700',
+    bgColor: 'bg-emerald-50',
   },
   completed: {
     label: 'Collected',
-    color: 'text-zinc-400',
-    bgColor: 'bg-zinc-400/10',
+    color: 'text-zinc-600',
+    bgColor: 'bg-surface-700',
   },
   cancelled: {
     label: 'Cancelled',
-    color: 'text-rose-400',
-    bgColor: 'bg-rose-400/10',
+    color: 'text-rose-700',
+    bgColor: 'bg-rose-50',
   },
 };
+
 
 // Category display config
 export const CATEGORY_CONFIG: Record<

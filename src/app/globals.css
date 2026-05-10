@@ -5,37 +5,39 @@
    ============================================================ */
 
 @theme {
-  /* Brand Colors (Zomato Red) */
-  --color-brand-50: #fff1f2;
-  --color-brand-100: #ffe4e6;
-  --color-brand-200: #fecdd3;
-  --color-brand-300: #fda4af;
-  --color-brand-400: #fb7185;
-  --color-brand-500: #e23744; 
-  --color-brand-600: #be123c;
-  --color-brand-700: #9f1239;
-
-  /* Secondary Color (Blinkit Yellow) */
-  --color-highlight: #f7e312;
-  --color-highlight-dark: #d4c20f;
+  /* Brand Colors (Reference Orange) */
+  --color-brand-50: #fff7ed;
+  --color-brand-100: #ffedd5;
+  --color-brand-200: #fed7aa;
+  --color-brand-300: #fdba74;
+  --color-brand-400: #fb923c;
+  --color-brand-500: #EF7E4E; 
+  --color-brand-600: #d96636;
+  --color-brand-700: #b34b28;
 
   /* Surface Colors */
-  --color-surface-900: #0a0a0f;
-  --color-surface-800: #111118;
-  --color-surface-700: #1a1a24;
-  --color-surface-600: #23232f;
-  --color-surface-500: #2d2d3a;
+  --color-surface-900: #FEF9F5;
+  --color-surface-800: #FFFFFF;
+  --color-surface-700: #F3F1EF;
+  --color-surface-600: #E7E4E1;
+  --color-surface-500: #D8D4D0;
+
+  /* Typography */
+  --color-text-primary: #2D2D2D;
+  --color-text-secondary: #6B6B6B;
+
 
   /* Radius */
-  --radius-card: 1.25rem;
-  --radius-button: 1rem;
+  --radius-card: 1.5rem;
+  --radius-button: 1.125rem;
   --radius-badge: 9999px;
 
-  /* Shadows (Deeper for Zomato feel) */
-  --shadow-glow: 0 0 24px rgba(226, 55, 68, 0.2);
-  --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.15);
-  --shadow-elevated: 0 16px 60px rgba(0, 0, 0, 0.25);
+  /* Shadows (Soft & Airy) */
+  --shadow-glow: 0 8px 30px rgba(239, 126, 78, 0.15);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 12px 50px rgba(0, 0, 0, 0.08);
 }
+
 
 
 
@@ -68,39 +70,26 @@
 }
 
 :root {
-  --surface-900: #0a0a0f;
-  --surface-800: #111118;
-  --surface-700: #1a1a24;
-  --surface-600: #23232f;
-  --surface-500: #2d2d3a;
-  --text-primary: #e4e4e7;
-  --text-secondary: #a1a1aa;
-  --border-color: rgba(255, 255, 255, 0.06);
-  --glass-bg: rgba(26, 26, 36, 0.7);
-}
-
-.light-theme {
-  --surface-900: #f8fafc;
-  --surface-800: #ffffff;
-  --surface-700: #f1f5f9;
-  --surface-600: #e2e8f0;
-  --surface-500: #cbd5e1;
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --border-color: rgba(0, 0, 0, 0.06);
-  --glass-bg: rgba(255, 255, 255, 0.7);
+  --surface-900: #FEF9F5; /* Soft Cream Background */
+  --surface-800: #FFFFFF; /* Pure Surface */
+  --surface-700: #F3F1EF; /* Subtle Grey-Beige */
+  --surface-600: #E7E4E1;
+  --surface-500: #D8D4D0;
+  --text-primary: #2D2D2D; /* Deep Charcoal */
+  --text-secondary: #6B6B6B; /* Medium Grey */
+  --border-color: rgba(0, 0, 0, 0.05);
+  --glass-bg: rgba(255, 255, 255, 0.85);
 }
 
 html {
   scroll-behavior: smooth;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  color-scheme: light; /* Force browser to light mode */
 }
 
 body {
   background-color: var(--surface-900);
   color: var(--text-primary);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ============================================================
@@ -112,14 +101,15 @@ body {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border-color);
-  transition: background-color 0.3s ease, border-color 0.3s ease;
+  box-shadow: var(--shadow-card);
 }
 
 .glass-light {
-  background: var(--glass-bg);
+  background: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-color);
+
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 

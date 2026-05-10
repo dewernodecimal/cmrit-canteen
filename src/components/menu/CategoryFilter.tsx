@@ -22,9 +22,10 @@ export default function CategoryFilter({ selected, onSelect }: CategoryFilterPro
             whitespace-nowrap transition-all duration-300 cursor-pointer shrink-0 border
             ${
               selected === key
-                ? 'gradient-brand text-white border-transparent shadow-xl shadow-brand-500/30 scale-105'
-                : 'bg-surface-800 text-zinc-400 border-white/5 hover:border-brand-500/30 hover:text-white'
+                ? 'gradient-brand text-white border-transparent shadow-xl shadow-brand-500/20 scale-105'
+                : 'bg-surface-700 text-text-secondary border-transparent hover:bg-surface-600 hover:text-text-primary'
             }
+
           `}
         >
           <span className="text-base">{emoji}</span>

@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
-import { useTheme } from '@/contexts/ThemeContext';
 import { formatPrice } from '@/lib/constants';
 import CartDrawer from '@/components/cart/CartDrawer';
 import AuthModal from '@/components/AuthModal';
@@ -16,8 +15,8 @@ export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
   const { totalItems } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
-  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
+
 
   // Don't show navbar on staff pages
   if (pathname.startsWith('/staff')) return null;
@@ -33,10 +32,11 @@ export default function Navbar() {
                 <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-lg font-extrabold text-white leading-tight tracking-tight">
+                <h1 className="text-lg font-extrabold text-primary leading-tight tracking-tight">
                   CMRIT <span className="gradient-text">Bites</span>
                 </h1>
               </div>
+
             </Link>
 
 
@@ -80,21 +80,12 @@ export default function Navbar() {
                 </button>
               )}
 
-              {/* Theme toggle */}
-              <button
-                onClick={toggleTheme}
-                className="p-2.5 rounded-xl glass-light hover:bg-surface-600 transition-colors text-zinc-300 hover:text-white"
-                title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
-
               {/* Cart button */}
               <button
                 onClick={() => setCartOpen(true)}
                 className="relative p-2.5 rounded-xl glass-light hover:bg-surface-600 transition-colors cursor-pointer group"
               >
-                <ShoppingBag className="w-5 h-5 text-zinc-300 group-hover:text-white transition-colors" />
+                <ShoppingBag className="w-5 h-5 text-zinc-500 group-hover:text-brand-500 transition-colors" />
                 {totalItems > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full gradient-brand text-[10px] font-bold text-white flex items-center justify-center shadow-lg">
                     {totalItems > 9 ? '9+' : totalItems}
@@ -102,6 +93,7 @@ export default function Navbar() {
                 )}
               </button>
             </div>
+
           </div>
         </div>
       </nav>

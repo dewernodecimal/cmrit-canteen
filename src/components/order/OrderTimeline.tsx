@@ -25,11 +25,11 @@ const statusOrder: OrderStatus[] = [
 export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
   if (currentStatus === 'cancelled') {
     return (
-      <div className="flex items-center gap-3 p-4 rounded-xl bg-rose-400/10 border border-rose-400/20">
-        <XCircle className="w-6 h-6 text-rose-400" />
+      <div className="flex items-center gap-3 p-4 rounded-xl bg-rose-50 border border-rose-100">
+        <XCircle className="w-6 h-6 text-rose-600" />
         <div>
-          <p className="text-sm font-medium text-rose-400">Order Cancelled</p>
-          <p className="text-xs text-rose-400/60 mt-0.5">
+          <p className="text-sm font-bold text-rose-600">Order Cancelled</p>
+          <p className="text-xs text-rose-600/70 mt-0.5 font-medium">
             Credits have been added to your account
           </p>
         </div>
@@ -49,21 +49,21 @@ export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
         return (
           <div key={step.status} className="flex items-center flex-1 last:flex-none">
             {/* Step circle */}
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="flex flex-col items-center gap-2">
               <div
                 className={`
-                  w-9 h-9 rounded-full flex items-center justify-center
-                  transition-all duration-500
-                  ${isCompleted ? 'bg-emerald-500 text-white' : ''}
-                  ${isCurrent ? 'gradient-brand text-white animate-pulse-glow' : ''}
-                  ${isPending ? 'bg-surface-600 text-zinc-500' : ''}
+                  w-10 h-10 rounded-full flex items-center justify-center
+                  transition-all duration-500 shadow-sm
+                  ${isCompleted ? 'bg-emerald-500 text-white shadow-emerald-500/20' : ''}
+                  ${isCurrent ? 'bg-brand-500 text-white animate-pulse-glow shadow-brand-500/20' : ''}
+                  ${isPending ? 'bg-surface-700 text-text-secondary' : ''}
                 `}
               >
                 {step.icon}
               </div>
               <span
-                className={`text-[10px] font-medium ${
-                  isCurrent ? 'text-brand-400' : isCompleted ? 'text-emerald-400' : 'text-zinc-500'
+                className={`text-[9px] font-black uppercase tracking-widest ${
+                  isCurrent ? 'text-brand-600' : isCompleted ? 'text-emerald-600' : 'text-text-secondary'
                 }`}
               >
                 {step.label}
@@ -72,10 +72,10 @@ export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
 
             {/* Connector */}
             {idx < steps.length - 1 && (
-              <div className="flex-1 mx-1.5">
+              <div className="flex-1 mx-1 px-1">
                 <div
                   className={`h-0.5 rounded-full transition-all duration-500 ${
-                    isCompleted ? 'bg-emerald-500' : 'bg-surface-600'
+                    isCompleted ? 'bg-emerald-500' : 'bg-surface-700'
                   }`}
                 />
               </div>
@@ -84,5 +84,6 @@ export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
         );
       })}
     </div>
+
   );
 }

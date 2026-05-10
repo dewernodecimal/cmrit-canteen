@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 // GET: Fetch all active orders (for staff dashboard)
 export async function GET(req: NextRequest) {
   try {

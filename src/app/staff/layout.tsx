@@ -59,13 +59,13 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   if (!authenticated) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-        <div className="glass rounded-2xl p-8 w-full max-w-sm space-y-6 animate-slide-up">
+        <div className="bg-surface-800 border border-surface-700 rounded-3xl p-10 w-full max-w-sm space-y-8 animate-slide-up shadow-2xl shadow-surface-900/10">
           <div className="text-center">
-            <div className="w-16 h-16 rounded-2xl gradient-brand mx-auto flex items-center justify-center mb-4 shadow-lg shadow-brand-500/20">
-              <ShieldCheck className="w-8 h-8 text-white" />
+            <div className="w-20 h-20 rounded-3xl bg-brand-500 mx-auto flex items-center justify-center mb-6 shadow-xl shadow-brand-500/20">
+              <ShieldCheck className="w-10 h-10 text-white" />
             </div>
-            <h2 className="text-xl font-bold text-white">Staff Access</h2>
-            <p className="text-sm text-zinc-400 mt-1">
+            <h2 className="text-2xl font-black text-text-primary tracking-tight">Staff Access</h2>
+            <p className="text-sm text-text-secondary mt-2 font-medium">
               Enter your staff PIN to continue
             </p>
           </div>
@@ -81,7 +81,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
 
           <Button
             size="lg"
-            className="w-full"
+            className="w-full shadow-lg shadow-brand-500/20"
             onClick={handleAuth}
             isLoading={loading}
           >
@@ -93,16 +93,16 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex">
+    <div className="min-h-[calc(100vh-4rem)] flex bg-surface-900">
       {/* Sidebar */}
-      <aside className="w-56 shrink-0 glass border-r border-white/5 p-4 hidden sm:flex flex-col">
-        <div className="space-y-1 flex-1">
+      <aside className="w-64 shrink-0 bg-surface-800 border-r border-surface-700 p-6 hidden sm:flex flex-col shadow-sm">
+        <div className="space-y-2 flex-1">
           <Link
             href="/staff/dashboard"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
               pathname === '/staff/dashboard'
-                ? 'gradient-brand text-white shadow-lg'
-                : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
+                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
             }`}
           >
             <LayoutDashboard className="w-4 h-4" />
@@ -110,10 +110,10 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link
             href="/staff/inventory"
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
               pathname === '/staff/inventory'
-                ? 'gradient-brand text-white shadow-lg'
-                : 'text-zinc-400 hover:text-white hover:bg-white/5'
+                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
+                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
             }`}
           >
             <Package className="w-4 h-4" />
@@ -127,12 +127,13 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
             setPin('');
             sessionStorage.removeItem('staff_pin');
           }}
-          className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-500 hover:text-rose-400 hover:bg-rose-400/5 transition-colors cursor-pointer"
+          className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-text-secondary hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer mt-auto"
         >
           <LogOut className="w-4 h-4" />
           Logout
         </button>
       </aside>
+
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6">

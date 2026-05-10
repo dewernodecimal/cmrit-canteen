@@ -174,14 +174,15 @@ export default function StaffDashboard() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Order Queue</h1>
-          <p className="text-sm text-zinc-400 mt-0.5">
+          <h1 className="text-2xl font-black text-text-primary tracking-tight">Order Queue</h1>
+          <p className="text-sm text-text-secondary mt-0.5 font-medium">
             {orders.length} active {orders.length === 1 ? 'order' : 'orders'}
           </p>
         </div>
         <Button
           variant="secondary"
           size="sm"
+          className="font-bold"
           icon={<RefreshCw className="w-4 h-4" />}
           onClick={fetchOrders}
           isLoading={isLoading}
@@ -191,27 +192,27 @@ export default function StaffDashboard() {
       </div>
 
       {/* Top Up Credits Form */}
-      <Card className="border-emerald-500/20 bg-emerald-500/5">
+      <Card className="border-emerald-500/20 bg-emerald-50 p-6">
         <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row items-end gap-4">
           <div className="flex-1 w-full">
-            <label className="block text-xs font-medium text-emerald-400 mb-1.5">Student Phone Number</label>
+            <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">Student Phone Number</label>
             <input
               type="tel"
               placeholder="10-digit number"
               value={topUpPhone}
               onChange={(e) => setTopUpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-              className="w-full h-10 px-3 rounded-lg bg-black/40 border border-emerald-500/20 text-white focus:outline-none focus:border-emerald-500 text-sm"
+              className="w-full h-12 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm font-bold tracking-wider transition-all"
               required
             />
           </div>
           <div className="flex-1 w-full">
-            <label className="block text-xs font-medium text-emerald-400 mb-1.5">Amount (₹)</label>
+            <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">Amount (₹)</label>
             <input
               type="number"
               placeholder="e.g. 100"
               value={topUpAmount}
               onChange={(e) => setTopUpAmount(e.target.value)}
-              className="w-full h-10 px-3 rounded-lg bg-black/40 border border-emerald-500/20 text-white focus:outline-none focus:border-emerald-500 text-sm"
+              className="w-full h-12 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm font-bold transition-all"
               min="1"
               required
             />
@@ -219,7 +220,7 @@ export default function StaffDashboard() {
           <Button
             type="submit"
             variant="primary"
-            className="w-full sm:w-auto h-10 bg-emerald-500 hover:bg-emerald-600 text-white shadow-none"
+            className="w-full sm:w-auto h-12 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 px-8 font-black uppercase tracking-widest text-xs"
             isLoading={isToppingUp}
           >
             Add Credits
@@ -229,24 +230,29 @@ export default function StaffDashboard() {
 
       {/* Empty state */}
       {orders.length === 0 && !isLoading && (
-        <div className="text-center py-16">
-          <Clock className="w-16 h-16 text-zinc-700 mx-auto mb-4" />
-          <p className="text-zinc-400 text-sm">No active orders</p>
-          <p className="text-zinc-500 text-xs mt-1">
+        <div className="text-center py-24 bg-surface-800 rounded-3xl border border-surface-700">
+          <Clock className="w-20 h-20 text-surface-600 mx-auto mb-6" />
+          <p className="text-text-primary font-bold text-xl">No active orders</p>
+          <p className="text-text-secondary text-sm mt-2 font-medium">
             New orders will appear here in real-time
           </p>
         </div>
       )}
 
       {/* Order columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 overflow-x-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Confirmed */}
-        <div className="min-w-[250px]">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-sky-400" />
-            <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-              New ({statusGroups.confirmed.length})
-            </h2>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-surface-800 p-3 rounded-2xl border border-surface-700">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-sky-500 shadow-lg shadow-sky-500/20" />
+              <h2 className="text-[10px] font-black text-text-primary uppercase tracking-widest">
+                New Queue
+              </h2>
+            </div>
+            <span className="bg-surface-700 text-text-primary text-[10px] font-black px-2 py-0.5 rounded-md border border-surface-600">
+              {statusGroups.confirmed.length}
+            </span>
           </div>
           <div className="space-y-3">
             {statusGroups.confirmed.map((order) => (
@@ -262,12 +268,17 @@ export default function StaffDashboard() {
         </div>
 
         {/* In Progress */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-brand-400" />
-            <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-              Preparing ({statusGroups.in_progress.length})
-            </h2>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-surface-800 p-3 rounded-2xl border border-surface-700">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-brand-500 shadow-lg shadow-brand-500/20" />
+              <h2 className="text-[10px] font-black text-text-primary uppercase tracking-widest">
+                Preparing
+              </h2>
+            </div>
+            <span className="bg-surface-700 text-text-primary text-[10px] font-black px-2 py-0.5 rounded-md border border-surface-600">
+              {statusGroups.in_progress.length}
+            </span>
           </div>
           <div className="space-y-3">
             {statusGroups.in_progress.map((order) => (
@@ -283,12 +294,17 @@ export default function StaffDashboard() {
         </div>
 
         {/* Ready */}
-        <div>
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-emerald-400" />
-            <h2 className="text-sm font-semibold text-zinc-300 uppercase tracking-wider">
-              Ready ({statusGroups.ready.length})
-            </h2>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between bg-surface-800 p-3 rounded-2xl border border-surface-700">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-lg shadow-emerald-500/20" />
+              <h2 className="text-[10px] font-black text-text-primary uppercase tracking-widest">
+                Ready to Go
+              </h2>
+            </div>
+            <span className="bg-surface-700 text-text-primary text-[10px] font-black px-2 py-0.5 rounded-md border border-surface-600">
+              {statusGroups.ready.length}
+            </span>
           </div>
           <div className="space-y-3">
             {statusGroups.ready.map((order) => (
@@ -329,36 +345,36 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
   const timeSince = getTimeSince(new Date(order.created_at));
 
   return (
-    <Card padding="sm" className="animate-fade-in">
+    <Card padding="sm" className="animate-fade-in border-surface-700 shadow-sm hover:shadow-md transition-shadow">
       {/* Header */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="flex items-start justify-between mb-4 border-b border-surface-700 pb-3">
         <div>
           {order.collection_code && order.status !== 'awaiting_verification' && (
-            <div className="text-2xl font-bold font-mono gradient-text mb-1">
+            <div className="text-3xl font-black text-text-primary mb-1 tracking-tighter">
               #{order.collection_code}
             </div>
           )}
           {order.status === 'awaiting_verification' && order.utr_number && (
-            <div className="text-sm font-bold font-mono text-purple-400 mb-1">
+            <div className="text-sm font-black font-mono text-purple-700 mb-1">
               UTR: {order.utr_number}
             </div>
           )}
-          <p className="text-xs text-zinc-500">
+          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
             {order.phone} · {timeSince}
           </p>
         </div>
-        <Badge variant="info">{formatPrice(order.total_amount)}</Badge>
+        <Badge variant="info" className="font-black">{formatPrice(order.total_amount)}</Badge>
       </div>
 
       {/* Items */}
-      <div className="space-y-1.5 mb-4">
+      <div className="space-y-2 mb-5 px-1">
         {order.order_items.map((item) => (
           <div
             key={item.id}
             className="flex items-center justify-between text-sm"
           >
-            <span className="text-zinc-300">
-              {item.quantity}× {item.item_name}
+            <span className="text-text-primary font-bold">
+              <span className="text-brand-600 font-black">{item.quantity}×</span> {item.item_name}
             </span>
           </div>
         ))}
@@ -386,13 +402,14 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
               }
             }}
             isLoading={isUpdating}
-            className="flex-1"
+            className="flex-1 font-black uppercase tracking-tighter text-[10px] h-9"
           >
             {actionBtn.label}
           </Button>
         ))}
       </div>
     </Card>
+
   );
 }
 

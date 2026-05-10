@@ -32,13 +32,13 @@ export default function OrderPage({
     return (
       <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center">
         <p className="text-5xl mb-4">🔍</p>
-        <h2 className="text-xl font-semibold text-white mb-2">
+        <h2 className="text-xl font-semibold text-text-primary mb-2">
           Order Not Found
         </h2>
-        <p className="text-sm text-zinc-400 mb-6">
+        <p className="text-sm text-text-secondary mb-6">
           This order might have expired or doesn&apos;t exist.
         </p>
-        <Link href="/menu" className="text-brand-400 hover:text-brand-300 text-sm">
+        <Link href="/menu" className="text-brand-500 hover:text-brand-600 text-sm font-bold">
           ← Back to Menu
         </Link>
       </div>
@@ -56,13 +56,13 @@ export default function OrderPage({
       <div className="flex items-center gap-3">
         <Link
           href="/menu"
-          className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors"
+          className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-700 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Order Status</h1>
-          <p className="text-xs text-zinc-500 font-mono">
+          <h1 className="text-2xl font-bold text-text-primary">Order Status</h1>
+          <p className="text-xs text-text-secondary font-mono">
             #{order.id.slice(0, 8)}
           </p>
         </div>
@@ -71,7 +71,7 @@ export default function OrderPage({
       {/* Status Badge */}
       <Card className="text-center">
         <div
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold ${statusConfig?.bgColor} ${statusConfig?.color}`}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${statusConfig?.bgColor} ${statusConfig?.color}`}
         >
           <Clock className="w-4 h-4" />
           {statusConfig?.label}
@@ -87,7 +87,7 @@ export default function OrderPage({
 
       {/* Timeline */}
       <Card>
-        <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-5">
+        <h3 className="text-sm font-black text-text-secondary uppercase tracking-widest mb-5">
           Order Progress
         </h3>
         <OrderTimeline currentStatus={order.status} />
@@ -95,22 +95,22 @@ export default function OrderPage({
 
       {/* Order Items */}
       <Card>
-        <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3">
+        <h3 className="text-sm font-black text-text-secondary uppercase tracking-widest mb-3">
           Items Ordered
         </h3>
         <div className="space-y-3">
           {order.order_items.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between py-2 border-b border-white/5 last:border-0"
+              className="flex items-center justify-between py-2 border-b border-surface-700 last:border-0"
             >
               <div>
-                <p className="text-sm font-medium text-white">{item.item_name}</p>
-                <p className="text-xs text-zinc-500">
+                <p className="text-sm font-bold text-text-primary">{item.item_name}</p>
+                <p className="text-xs text-text-secondary">
                   {formatPrice(item.unit_price)} × {item.quantity}
                 </p>
               </div>
-              <span className="text-sm font-semibold text-brand-400">
+              <span className="text-sm font-black text-brand-500">
                 {formatPrice(item.unit_price * item.quantity)}
               </span>
             </div>
@@ -118,16 +118,16 @@ export default function OrderPage({
         </div>
 
         {/* Total */}
-        <div className="border-t border-white/5 pt-3 mt-3 flex justify-between">
-          <span className="text-sm text-zinc-400">Total</span>
+        <div className="border-t border-surface-700 pt-3 mt-3 flex justify-between">
+          <span className="text-sm text-text-secondary">Total</span>
           <span className="text-base font-bold gradient-text">
             {formatPrice(order.total_amount)}
           </span>
         </div>
         {order.credits_used > 0 && (
           <div className="flex justify-between mt-1">
-            <span className="text-xs text-emerald-400">Credits Used</span>
-            <span className="text-xs text-emerald-400">
+            <span className="text-xs text-emerald-600 font-bold">Credits Used</span>
+            <span className="text-xs text-emerald-600 font-bold">
               -{formatPrice(order.credits_used)}
             </span>
           </div>
@@ -136,10 +136,11 @@ export default function OrderPage({
 
       {/* Return CTA */}
       <div className="text-center pt-4">
-        <Link href="/menu" className="text-sm text-brand-400 hover:text-brand-300">
+        <Link href="/menu" className="text-sm text-brand-500 hover:text-brand-600 font-bold">
           ← Order something else
         </Link>
       </div>
+
     </div>
   );
 }
