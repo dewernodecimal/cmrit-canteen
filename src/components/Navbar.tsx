@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon, ClipboardList } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
 import { formatPrice } from '@/lib/constants';
@@ -16,6 +16,7 @@ export default function Navbar() {
   const { totalItems } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
   const pathname = usePathname();
+  const router = useRouter();
 
 
   // Don't show navbar on staff pages
@@ -79,6 +80,26 @@ export default function Navbar() {
                   Login / Register
                 </button>
               )}
+
+              {/* My Orders button (Always visible) */}
+              <button
+                onClick={() => {
+                  if (isLoggedIn) {
+                    router.push('/orders');
+                  } else {
+                    setAuthOpen(true);
+                  }
+                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${
+                  pathname === '/orders'
+                    ? 'bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/20'
+                    : 'bg-surface-700 border-surface-600 text-text-secondary hover:text-text-primary hover:bg-surface-600'
+                }`}
+                title="My Orders"
+              >
+                <ClipboardList className={`w-3.5 h-3.5 ${pathname === '/orders' ? 'text-white' : ''}`} />
+                <span className="hidden sm:inline font-bold text-[10px] uppercase tracking-wider">Orders</span>
+              </button>
 
               {/* Cart button */}
               <button
