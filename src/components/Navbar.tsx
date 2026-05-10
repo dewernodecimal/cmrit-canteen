@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon, ClipboardList } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
+import { useOrders } from '@/hooks/useOrders';
 import { formatPrice } from '@/lib/constants';
 import CartDrawer from '@/components/cart/CartDrawer';
 import AuthModal from '@/components/AuthModal';
@@ -15,9 +16,13 @@ export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
   const { totalItems } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
+  const { orders } = useOrders(phone);
   const pathname = usePathname();
   const router = useRouter();
 
+  const ongoingOrdersCount = orders.filter((o) =>
+    ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress', 'ready'].includes(o.status)
+  ).length;
 
   // Don't show navbar on staff pages
   if (pathname.startsWith('/staff')) return null;
@@ -90,7 +95,7 @@ export default function Navbar() {
                     setAuthOpen(true);
                   }
                 }}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${
+                className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${
                   pathname === '/orders'
                     ? 'bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/20'
                     : 'bg-surface-700 border-surface-600 text-text-secondary hover:text-text-primary hover:bg-surface-600'
@@ -99,6 +104,11 @@ export default function Navbar() {
               >
                 <ClipboardList className={`w-3.5 h-3.5 ${pathname === '/orders' ? 'text-white' : ''}`} />
                 <span className="hidden sm:inline font-bold text-[10px] uppercase tracking-wider">Orders</span>
+                {ongoingOrdersCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-[9px] font-black text-white flex items-center justify-center shadow-md animate-fade-in border-2 border-surface-900">
+                    {ongoingOrdersCount > 9 ? '9+' : ongoingOrdersCount}
+                  </span>
+                )}
               </button>
 
               {/* Cart button */}

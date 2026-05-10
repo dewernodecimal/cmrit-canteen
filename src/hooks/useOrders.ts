@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
+import toast from 'react-hot-toast';
 import type { Order, OrderWithItems } from '@/types';
 
 export function useOrders(phone: string | null) {
@@ -43,19 +44,31 @@ export function useOrders(phone: string | null) {
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*', // Listen to all events (INSERT, UPDATE)
           schema: 'public',
           table: 'orders',
           filter: `phone=eq.${phone}`,
         },
-        (payload) => {
-          setOrders((prev) =>
-            prev.map((order) =>
-              order.id === payload.new.id
-                ? { ...order, ...payload.new }
-                : order
-            )
-          );
+        async (payload) => {
+          if (payload.eventType === 'INSERT') {
+            // Re-fetch to get order_items as well
+            fetchOrders();
+            toast.success('Order placed successfully! Check My Orders.');
+          } else if (payload.eventType === 'UPDATE') {
+            if (payload.new.status === 'cancelled') {
+              toast.error('Order cancelled by canteen. Credits have been refunded.');
+            } else if (payload.new.status === 'ready') {
+              toast.success('Your order is ready for pickup!');
+            }
+            
+            setOrders((prev) =>
+              prev.map((order) =>
+                order.id === payload.new.id
+                  ? { ...order, ...payload.new }
+                  : order
+              )
+            );
+          }
         }
       )
       .subscribe();

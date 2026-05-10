@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Clock, Receipt, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Clock, Receipt, CheckCircle, XCircle, Package } from 'lucide-react';
 import { usePhone } from '@/contexts/PhoneContext';
 import { useOrders } from '@/hooks/useOrders';
 import AuthModal from '@/components/AuthModal';
@@ -49,9 +49,11 @@ export default function OrdersPage() {
     );
   }
 
-  const ongoingOrders = orders.filter((o) =>
-    ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress', 'ready'].includes(o.status)
+  const preparingOrders = orders.filter((o) =>
+    ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress'].includes(o.status)
   );
+  
+  const readyOrders = orders.filter((o) => o.status === 'ready');
 
   const pastOrders = orders.filter((o) => ['completed', 'cancelled'].includes(o.status));
 
@@ -76,23 +78,38 @@ export default function OrdersPage() {
           </Link>
         </div>
       ) : (
-        <div className="space-y-10">
-          {/* Ongoing Orders */}
-          {ongoingOrders.length > 0 && (
+        <div className="space-y-12">
+          {/* Section 1: Ready for Pickup (Most Important) */}
+          {readyOrders.length > 0 && (
+            <section>
+              <h2 className="text-sm font-black text-emerald-600 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Ready to Pickup
+              </h2>
+              <div className="space-y-4 stagger-children">
+                {readyOrders.map((order) => (
+                  <OrderCard key={order.id} order={order} statusType="ready" />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* Section 2: Ongoing Orders (Preparing) */}
+          {preparingOrders.length > 0 && (
             <section>
               <h2 className="text-sm font-black text-text-secondary uppercase tracking-widest mb-4 flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
                 Ongoing Orders
               </h2>
               <div className="space-y-4 stagger-children">
-                {ongoingOrders.map((order) => (
-                  <OrderCard key={order.id} order={order} isOngoing={true} />
+                {preparingOrders.map((order) => (
+                  <OrderCard key={order.id} order={order} statusType="ongoing" />
                 ))}
               </div>
             </section>
           )}
 
-          {/* Past Orders */}
+          {/* Section 3: Past Orders */}
           {pastOrders.length > 0 && (
             <section>
               <h2 className="text-sm font-black text-text-secondary uppercase tracking-widest mb-4">
@@ -100,7 +117,7 @@ export default function OrdersPage() {
               </h2>
               <div className="space-y-4">
                 {pastOrders.map((order) => (
-                  <OrderCard key={order.id} order={order} isOngoing={false} />
+                  <OrderCard key={order.id} order={order} statusType="past" />
                 ))}
               </div>
             </section>
@@ -111,14 +128,23 @@ export default function OrdersPage() {
   );
 }
 
-function OrderCard({ order, isOngoing }: { order: any; isOngoing: boolean }) {
+function OrderCard({ order, statusType }: { order: any; statusType: 'ready' | 'ongoing' | 'past' }) {
   const statusConfig = ORDER_STATUS_CONFIG[order.status];
-  const showCode =
-    isOngoing && order.collection_code && ['confirmed', 'in_progress', 'ready'].includes(order.status);
+  
+  // Custom tag styling for Past Orders as requested: Red for cancelled, Grey for collected
+  const tagStyles = order.status === 'cancelled' 
+    ? 'bg-rose-50 text-rose-700 border-rose-100' 
+    : order.status === 'completed' 
+    ? 'bg-surface-700 text-zinc-600 border-surface-600'
+    : `${statusConfig?.bgColor} ${statusConfig?.color} border-transparent`;
+
+  const showCode = (statusType === 'ready' || statusType === 'ongoing') && 
+                   order.collection_code && 
+                   ['confirmed', 'in_progress', 'ready'].includes(order.status);
 
   return (
     <Link href={`/order/${order.id}`}>
-      <Card className="hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 transition-all cursor-pointer group">
+      <Card className={`hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 transition-all cursor-pointer group ${statusType === 'ready' ? 'border-emerald-500/30 bg-emerald-50/10' : ''}`}>
         <div className="flex justify-between items-start mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
@@ -128,11 +154,12 @@ function OrderCard({ order, isOngoing }: { order: any; isOngoing: boolean }) {
               </span>
             </div>
             <div
-              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${statusConfig?.bgColor} ${statusConfig?.color}`}
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider border ${tagStyles}`}
             >
               {order.status === 'completed' && <CheckCircle className="w-3 h-3" />}
               {order.status === 'cancelled' && <XCircle className="w-3 h-3" />}
-              {isOngoing && <Clock className="w-3 h-3" />}
+              {statusType === 'ongoing' && <Clock className="w-3 h-3" />}
+              {statusType === 'ready' && <Package className="w-3 h-3" />}
               {statusConfig?.label}
             </div>
           </div>
@@ -145,9 +172,9 @@ function OrderCard({ order, isOngoing }: { order: any; isOngoing: boolean }) {
         {/* Collection Code Highlight */}
         {showCode && (
           <div className="mt-4 pt-4 border-t border-surface-700">
-            <div className="flex items-center justify-between bg-brand-500/10 rounded-xl p-3 border border-brand-500/20 group-hover:bg-brand-500/15 transition-colors">
-              <span className="text-xs font-bold text-brand-600 uppercase tracking-widest">Collection Code</span>
-              <span className="text-xl font-black text-brand-600 tracking-[0.2em]">{order.collection_code}</span>
+            <div className={`flex items-center justify-between rounded-xl p-3 border group-hover:bg-brand-500/15 transition-colors ${statusType === 'ready' ? 'bg-emerald-500/10 border-emerald-500/20' : 'bg-brand-500/10 border-brand-500/20'}`}>
+              <span className={`text-xs font-bold uppercase tracking-widest ${statusType === 'ready' ? 'text-emerald-700' : 'text-brand-600'}`}>Collection Code</span>
+              <span className={`text-xl font-black tracking-[0.2em] ${statusType === 'ready' ? 'text-emerald-700' : 'text-brand-600'}`}>{order.collection_code}</span>
             </div>
           </div>
         )}
