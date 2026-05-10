@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { useOrder } from '@/hooks/useOrders';
@@ -13,11 +13,15 @@ import { formatPrice, ORDER_STATUS_CONFIG } from '@/lib/constants';
 export default function OrderPage({
   params,
 }: {
-  params: any;
+  params: Promise<{ id: string }>;
 }) {
-  // Safe unwrapping for both Next.js 14 and 15
-  const id = params?.id || (params && typeof params === 'object' && 'id' in params ? params.id : '');
+  const { id } = use(params);
   const { order, isLoading } = useOrder(id);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (isLoading) {
     return (
@@ -51,17 +55,12 @@ export default function OrderPage({
     order.collection_code &&
     ['confirmed', 'in_progress', 'ready'].includes(order.status);
 
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex items-center gap-3">
         <Link
-          href="/menu"
+          href="/orders"
           className="p-2 rounded-lg text-text-secondary hover:text-text-primary hover:bg-surface-700 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
@@ -139,6 +138,13 @@ export default function OrderPage({
           </div>
         )}
       </Card>
+
+      {/* Placed At */}
+      <div className="text-center text-xs text-text-secondary">
+        {mounted
+          ? `Placed at ${new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} on ${new Date(order.created_at).toLocaleDateString()}`
+          : '...'}
+      </div>
 
       {/* Return CTA */}
       <div className="text-center pt-4">

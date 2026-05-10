@@ -50,7 +50,7 @@ export default function OrdersPage() {
   }
 
   const preparingOrders = orders.filter((o) =>
-    ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress'].includes(o.status)
+    ['awaiting_verification', 'confirmed', 'in_progress'].includes(o.status)
   );
   
   const readyOrders = orders.filter((o) => o.status === 'ready');
