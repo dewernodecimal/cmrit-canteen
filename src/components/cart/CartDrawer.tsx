@@ -60,14 +60,30 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         {/* Items */}
         <div className="flex-1 overflow-y-auto px-5">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center">
-              <ShoppingBag className="w-16 h-16 text-zinc-700 mb-4" />
-              <p className="text-zinc-400 text-sm">Your cart is empty</p>
-              <p className="text-zinc-500 text-xs mt-1">
-                Add items from the menu to get started
+            <div className="flex flex-col items-center justify-center h-full text-center px-6 animate-fade-in">
+              <div className="relative w-48 h-48 mb-6">
+                <div className="absolute inset-0 bg-brand-500/10 blur-3xl rounded-full" />
+                <img 
+                  src="/empty_cart_illustration_1778389808753.png" 
+                  alt="Empty Cart" 
+                  className="relative w-full h-full object-contain opacity-80"
+                />
+              </div>
+              <p className="text-white font-semibold text-lg">Your cart is feeling lonely</p>
+              <p className="text-zinc-500 text-sm mt-2 max-w-[240px]">
+                Explore our menu and add some delicious treats to get started!
               </p>
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="mt-6"
+                onClick={onClose}
+              >
+                Start Browsing
+              </Button>
             </div>
           ) : (
+
             <div className="py-2">
               {items.map((item) => (
                 <CartItem key={item.menuItem.id} item={item} />

@@ -31,23 +31,24 @@ const CartContext = createContext<CartContextType | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
-  // Hydrate from sessionStorage
+  // Hydrate from localStorage
   useEffect(() => {
     try {
-      const stored = sessionStorage.getItem(STORAGE_KEYS.CART);
+      const stored = localStorage.getItem(STORAGE_KEYS.CART);
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) setItems(parsed);
       }
-    } catch {
-      // Corrupted data — ignore
+    } catch (e) {
+      console.error('Failed to parse cart from storage', e);
     }
   }, []);
 
-  // Sync to sessionStorage on change
+  // Sync to localStorage on change
   useEffect(() => {
-    sessionStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(items));
+    localStorage.setItem(STORAGE_KEYS.CART, JSON.stringify(items));
   }, [items]);
+
 
   const totalAmount = items.reduce(
     (sum, item) => sum + item.menuItem.price * item.quantity,

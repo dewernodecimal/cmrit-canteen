@@ -2,15 +2,19 @@
 
 import { PhoneProvider } from '@/contexts/PhoneContext';
 import { CartProvider } from '@/contexts/CartContext';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import Navbar from '@/components/Navbar';
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <PhoneProvider>
-      <CartProvider>
-        <Navbar />
-        <main className="flex-1">{children}</main>
-      </CartProvider>
-    </PhoneProvider>
+    <ThemeProvider>
+      <PhoneProvider>
+        <CartProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+        </CartProvider>
+      </PhoneProvider>
+    </ThemeProvider>
   );
 }
+

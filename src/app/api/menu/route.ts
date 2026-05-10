@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 
+export const revalidate = 60; // Revalidate every minute
+
 // GET: Fetch menu items (public)
 export async function GET() {
   try {

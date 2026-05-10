@@ -66,16 +66,28 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center">
-        <p className="text-5xl mb-4">🛒</p>
-        <h2 className="text-xl font-semibold text-white mb-2">Your cart is empty</h2>
-        <p className="text-sm text-zinc-400 mb-6">Head to the menu and add some delicious items!</p>
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-16 text-center animate-fade-in">
+        <div className="relative w-64 h-64 mx-auto mb-8">
+          <div className="absolute inset-0 bg-brand-500/10 blur-3xl rounded-full" />
+          <img 
+            src="/empty_cart_illustration_1778389808753.png" 
+            alt="Empty Cart" 
+            className="relative w-full h-full object-contain opacity-80"
+          />
+        </div>
+        <h2 className="text-2xl font-bold text-white mb-2">Your cart is empty</h2>
+        <p className="text-sm text-zinc-400 mb-8 max-w-sm mx-auto">
+          Head back to the menu to discover something delicious. Your cravings are waiting!
+        </p>
         <Link href="/menu">
-          <Button icon={<ArrowLeft className="w-4 h-4" />}>Back to Menu</Button>
+          <Button size="lg" icon={<ArrowLeft className="w-4 h-4" />}>
+            Back to Menu
+          </Button>
         </Link>
       </div>
     );
   }
+
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">

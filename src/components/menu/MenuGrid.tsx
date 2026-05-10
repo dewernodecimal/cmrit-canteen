@@ -6,7 +6,9 @@ import MenuCard from './MenuCard';
 import CategoryFilter from './CategoryFilter';
 import { MenuCardSkeleton } from '@/components/ui/Skeleton';
 import Input from '@/components/ui/Input';
+import Button from '@/components/ui/Button';
 import type { MenuItem } from '@/types';
+
 
 interface MenuGridProps {
   items: MenuItem[];
@@ -84,13 +86,31 @@ export default function MenuGrid({ items, isLoading = false, demandMap = {} }: M
 
       {/* Grid */}
       {filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <p className="text-4xl mb-3">🍽️</p>
-          <p className="text-zinc-400 text-sm">
-            {searchQuery ? 'No items match your search' : 'No items in this category'}
+        <div className="text-center py-20 animate-fade-in">
+          <div className="relative w-40 h-40 mx-auto mb-6 opacity-40 grayscale">
+            <img 
+              src="/empty_cart_illustration_1778389808753.png" 
+              alt="No results" 
+              className="w-full h-full object-contain"
+            />
+          </div>
+          <h3 className="text-white font-semibold text-lg">No items found</h3>
+          <p className="text-zinc-500 text-sm mt-2">
+            {searchQuery ? `We couldn't find anything matching "${searchQuery}"` : 'No items available in this category'}
           </p>
+          {searchQuery && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="mt-6 text-brand-400"
+              onClick={() => setSearchQuery('')}
+            >
+              Clear Search
+            </Button>
+          )}
         </div>
       ) : (
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
           {filtered.map((item) => (
             <MenuCard

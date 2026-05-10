@@ -3,9 +3,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle } from 'lucide-react';
+import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { formatPrice } from '@/lib/constants';
 import CartDrawer from '@/components/cart/CartDrawer';
 import AuthModal from '@/components/AuthModal';
@@ -15,6 +16,7 @@ export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
   const { totalItems } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
+  const { theme, toggleTheme } = useTheme();
   const pathname = usePathname();
 
   // Don't show navbar on staff pages
@@ -77,6 +79,15 @@ export default function Navbar() {
                 </button>
               )}
 
+              {/* Theme toggle */}
+              <button
+                onClick={toggleTheme}
+                className="p-2.5 rounded-xl glass-light hover:bg-surface-600 transition-colors text-zinc-300 hover:text-white"
+                title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+
               {/* Cart button */}
               <button
                 onClick={() => setCartOpen(true)}
@@ -93,6 +104,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
+
 
       <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
