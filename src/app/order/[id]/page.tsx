@@ -1,6 +1,5 @@
 'use client';
 
-import { use } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Clock } from 'lucide-react';
 import { useOrder } from '@/hooks/useOrders';
@@ -13,9 +12,10 @@ import { formatPrice, ORDER_STATUS_CONFIG } from '@/lib/constants';
 export default function OrderPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: any;
 }) {
-  const { id } = use(params);
+  // Safe unwrapping for both Next.js 14 and 15
+  const id = params?.id || (params && typeof params === 'object' && 'id' in params ? params.id : '');
   const { order, isLoading } = useOrder(id);
 
   if (isLoading) {
@@ -45,10 +45,15 @@ export default function OrderPage({
     );
   }
 
-  const statusConfig = ORDER_STATUS_CONFIG[order.status];
+  const statusConfig = ORDER_STATUS_CONFIG[order.status] || { label: order.status, color: 'text-text-secondary', bgColor: 'bg-surface-700' };
   const showCode =
     order.collection_code &&
     ['confirmed', 'in_progress', 'ready'].includes(order.status);
+
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6 animate-fade-in">
@@ -63,7 +68,7 @@ export default function OrderPage({
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Order Status</h1>
           <p className="text-xs text-text-secondary font-mono">
-            #{order.id.slice(0, 8)}
+            #{String(order.id || '').slice(0, 8)}
           </p>
         </div>
       </div>
@@ -71,10 +76,10 @@ export default function OrderPage({
       {/* Status Badge */}
       <Card className="text-center">
         <div
-          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${statusConfig?.bgColor} ${statusConfig?.color}`}
+          className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold ${statusConfig.bgColor} ${statusConfig.color}`}
         >
           <Clock className="w-4 h-4" />
-          {statusConfig?.label}
+          {statusConfig.label}
         </div>
       </Card>
 
@@ -99,7 +104,7 @@ export default function OrderPage({
           Items Ordered
         </h3>
         <div className="space-y-3">
-          {order.order_items.map((item) => (
+          {order.order_items?.map((item) => (
             <div
               key={item.id}
               className="flex items-center justify-between py-2 border-b border-surface-700 last:border-0"

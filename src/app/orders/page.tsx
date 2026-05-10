@@ -129,14 +129,18 @@ export default function OrdersPage() {
 }
 
 function OrderCard({ order, statusType }: { order: any; statusType: 'ready' | 'ongoing' | 'past' }) {
-  const statusConfig = ORDER_STATUS_CONFIG[order.status];
+  const [mounted, setMounted] = useState(false);
+  const statusConfig = ORDER_STATUS_CONFIG[order.status] || { label: order.status, color: 'text-text-secondary', bgColor: 'bg-surface-700' };
   
-  // Custom tag styling for Past Orders as requested: Red for cancelled, Grey for collected
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const tagStyles = order.status === 'cancelled' 
     ? 'bg-rose-50 text-rose-700 border-rose-100' 
     : order.status === 'completed' 
     ? 'bg-surface-700 text-zinc-600 border-surface-600'
-    : `${statusConfig?.bgColor} ${statusConfig?.color} border-transparent`;
+    : `${statusConfig.bgColor} ${statusConfig.color} border-transparent`;
 
   const showCode = (statusType === 'ready' || statusType === 'ongoing') && 
                    order.collection_code && 
@@ -148,9 +152,9 @@ function OrderCard({ order, statusType }: { order: any; statusType: 'ready' | 'o
         <div className="flex justify-between items-start mb-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono text-text-secondary">#{order.id.slice(0, 8)}</span>
+              <span className="text-xs font-mono text-text-secondary">#{String(order.id || '').slice(0, 8)}</span>
               <span className="text-[10px] text-text-tertiary">
-                {new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                {mounted ? new Date(order.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '...'}
               </span>
             </div>
             <div
@@ -160,12 +164,12 @@ function OrderCard({ order, statusType }: { order: any; statusType: 'ready' | 'o
               {order.status === 'cancelled' && <XCircle className="w-3 h-3" />}
               {statusType === 'ongoing' && <Clock className="w-3 h-3" />}
               {statusType === 'ready' && <Package className="w-3 h-3" />}
-              {statusConfig?.label}
+              {statusConfig.label}
             </div>
           </div>
           <div className="text-right">
             <span className="text-sm font-black text-text-primary">{formatPrice(order.total_amount)}</span>
-            <p className="text-xs text-text-secondary mt-0.5">{order.order_items.length} items</p>
+            <p className="text-xs text-text-secondary mt-0.5">{(order.order_items?.length || 0)} items</p>
           </div>
         </div>
 
@@ -181,10 +185,10 @@ function OrderCard({ order, statusType }: { order: any; statusType: 'ready' | 'o
 
         {/* Items Summary */}
         <div className="mt-4 pt-4 border-t border-surface-700 flex flex-wrap gap-1.5 opacity-80">
-          {order.order_items.map((item: any, i: number) => (
+          {order.order_items?.map((item: any, i: number) => (
             <span key={item.id} className="text-xs text-text-secondary">
               {item.quantity}x {item.item_name}
-              {i < order.order_items.length - 1 ? ', ' : ''}
+              {i < (order.order_items?.length || 0) - 1 ? ', ' : ''}
             </span>
           ))}
         </div>

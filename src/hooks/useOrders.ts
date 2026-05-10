@@ -39,8 +39,9 @@ export function useOrders(phone: string | null) {
     if (!phone) return;
 
     const supabase = createClient();
+    const channelId = `user-orders-${phone}-${Math.random().toString(36).substring(7)}`;
     const channel = supabase
-      .channel('user-orders')
+      .channel(channelId)
       .on(
         'postgres_changes',
         {
@@ -51,12 +52,23 @@ export function useOrders(phone: string | null) {
         },
         async (payload) => {
           if (payload.eventType === 'INSERT') {
-            // Re-fetch to get order_items as well
-            fetchOrders();
-            toast.success('Order placed successfully! Check My Orders.');
+            // Re-fetch to get complete order data including items
+            const supabase = createClient();
+            const { data } = await supabase
+              .from('orders')
+              .select(`*, order_items(*)`)
+              .eq('id', payload.new.id)
+              .single();
+            
+            if (data) {
+              setOrders((prev) => [data as OrderWithItems, ...prev]);
+              toast.success('Order placed successfully!');
+            } else {
+              fetchOrders(); // Fallback to full fetch
+            }
           } else if (payload.eventType === 'UPDATE') {
             if (payload.new.status === 'cancelled') {
-              toast.error('Order cancelled by canteen. Credits have been refunded.');
+              toast.error('Order cancelled by canteen. Credits refunded.');
             } else if (payload.new.status === 'ready') {
               toast.success('Your order is ready for pickup!');
             }
@@ -64,7 +76,7 @@ export function useOrders(phone: string | null) {
             setOrders((prev) =>
               prev.map((order) =>
                 order.id === payload.new.id
-                  ? { ...order, ...payload.new }
+                  ? { ...order, ...payload.new } as OrderWithItems
                   : order
               )
             );
@@ -114,8 +126,9 @@ export function useOrder(orderId: string) {
     const supabase = createClient();
     
     // Real-time WebSocket
+    const channelId = `order-${orderId}-${Math.random().toString(36).substring(7)}`;
     const channel = supabase
-      .channel(`order-${orderId}`)
+      .channel(channelId)
       .on(
         'postgres_changes',
         {

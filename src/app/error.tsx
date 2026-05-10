@@ -14,6 +14,11 @@ export default function Error({
 }) {
   useEffect(() => {
     console.error('Unhandled app error:', error);
+    // Send error to our backend to log it in the terminal
+    fetch('/api/log-error', {
+      method: 'POST',
+      body: JSON.stringify({ message: error.message, stack: error.stack, digest: error.digest }),
+    }).catch(console.error);
   }, [error]);
 
   return (
