@@ -46,32 +46,31 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-lg font-bold text-white">
-              {mode === 'login' ? 'Welcome back' : 'Create account'}
-            </h2>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              {mode === 'login' ? 'Login to access your wallet' : 'Set up your canteen wallet'}
-            </p>
+        <div className="flex flex-col items-center text-center mb-8">
+          <div className="w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center shadow-xl shadow-brand-500/20 mb-4">
+            <LogIn className="w-8 h-8 text-white" />
           </div>
-          <button onClick={onClose} className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
-            <X className="w-4 h-4" />
-          </button>
+          <h2 className="text-2xl font-black text-white tracking-tight">
+            CMRIT <span className="text-brand-500">Bites</span>
+          </h2>
+          <p className="text-sm text-zinc-400 mt-1">
+            {mode === 'login' ? 'Welcome back! Login to order.' : 'Join the fastest canteen experience.'}
+          </p>
         </div>
+
 
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Phone */}
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1.5">Phone Number</label>
+            <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Phone Number</label>
             <div className="relative">
-              <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="tel"
                 placeholder="10-digit number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-surface-700 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500 text-sm"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-800 border border-white/5 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500/50 focus:bg-surface-700 transition-all text-base"
                 required
               />
             </div>
@@ -79,21 +78,22 @@ export default function AuthModal({ onClose }: AuthModalProps) {
 
           {/* Password */}
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1.5">
-              {mode === 'register' ? 'Set a PIN / Password' : 'Password'}
+            <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">
+              {mode === 'register' ? 'Set a Password' : 'Password'}
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
               <input
                 type="password"
                 placeholder={mode === 'register' ? 'Min. 4 characters' : 'Enter your password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-11 pl-9 pr-3 rounded-xl bg-surface-700 border border-white/10 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500 text-sm"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-800 border border-white/5 text-white placeholder:text-zinc-600 focus:outline-none focus:border-brand-500/50 focus:bg-surface-700 transition-all text-base"
                 required
               />
             </div>
           </div>
+
 
           {/* Error */}
           {error && (

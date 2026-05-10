@@ -29,15 +29,16 @@ export default function Navbar() {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded-xl gradient-brand flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
-                <UtensilsCrossed className="w-5 h-5 text-white" />
+              <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+                <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-base font-bold text-white leading-tight">
-                  CMRIT <span className="gradient-text">Canteen</span>
+                <h1 className="text-lg font-extrabold text-white leading-tight tracking-tight">
+                  CMRIT <span className="gradient-text">Bites</span>
                 </h1>
               </div>
             </Link>
+
 
             {/* Right side */}
             <div className="flex items-center gap-2">

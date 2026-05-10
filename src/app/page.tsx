@@ -7,25 +7,26 @@ import Button from '@/components/ui/Button';
 const steps = [
   {
     icon: <Scan className="w-6 h-6" />,
-    title: 'Scan QR Code',
-    description: 'Scan the QR code on any canteen poster with your phone camera',
+    title: 'Scan',
+    description: 'Find a Bites QR code around campus and scan it to open the menu.',
   },
   {
     icon: <ShoppingBag className="w-6 h-6" />,
-    title: 'Browse & Add',
-    description: 'Pick your favorites from the live menu with real-time stock levels',
+    title: 'Pick',
+    description: 'Browse the daily specials and add your favorites to the cart.',
   },
   {
     icon: <CreditCard className="w-6 h-6" />,
-    title: 'Pay Instantly',
-    description: 'Pay via UPI, cards, or use your Canteen Credits — no sign-up needed',
+    title: 'Pay',
+    description: 'Use your Bites Credits for a 1-tap checkout. No more OTP hassles.',
   },
   {
     icon: <Package className="w-6 h-6" />,
-    title: 'Pick Up',
-    description: 'Show your 4-digit code at the counter and grab your food',
+    title: 'Enjoy',
+    description: 'Head to the counter, show your code, and enjoy your meal.',
   },
 ];
+
 
 export default function HomePage() {
   return (
@@ -39,23 +40,23 @@ export default function HomePage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
           <div className="text-center space-y-6 animate-slide-up">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-sm text-brand-400 font-medium">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Canteen is open
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-sm text-brand-500 font-bold uppercase tracking-wider">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              Kitchen is Live
             </div>
 
             {/* Heading */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
-              Skip the Queue. <br />
-              <span className="gradient-text">Order from Your Phone.</span>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight">
+              Craving something? <br />
+              <span className="gradient-text">CMRIT Bites.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-lg text-zinc-400 max-w-xl mx-auto leading-relaxed">
-              No app to download, no account to create. Just scan, pick, pay, and eat.
-              Your lunch break just got{' '}
-              <span className="text-brand-400 font-semibold">30 minutes shorter</span>.
+            <p className="text-lg sm:text-xl text-zinc-400 max-w-2xl mx-auto leading-relaxed">
+              The fastest way to grab a meal. Skip the long lines at the counter. 
+              Order, pay with <span className="text-white font-bold">Bites Credits</span>, and pick up in style.
             </p>
+
 
             {/* CTA */}
             <div className="flex justify-center pt-4">
@@ -101,13 +102,15 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-8">
+      <footer className="border-t border-white/5 py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
-          <p className="text-xs text-zinc-600">
-            Built for CMRIT students · Powered by Razorpay &amp; Supabase
+          <h3 className="text-lg font-black text-white/20 mb-4 tracking-widest uppercase">CMRIT Bites</h3>
+          <p className="text-[10px] text-zinc-700 uppercase tracking-widest font-bold">
+            Built for the CMRIT Community · © 2026
           </p>
         </div>
       </footer>
+
     </div>
   );
 }

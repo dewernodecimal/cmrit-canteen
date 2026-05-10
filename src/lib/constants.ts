@@ -2,7 +2,8 @@
 // CMRIT Canteen — App Constants
 // ============================================================
 
-export const APP_NAME = 'CMRIT Canteen';
+export const APP_NAME = 'CMRIT Bites';
+
 export const APP_DESCRIPTION = 'Skip the queue. Order from your phone. Pick up when ready.';
 
 // High demand threshold — if ≥ this many pending/in-progress orders exist for an item, show warning

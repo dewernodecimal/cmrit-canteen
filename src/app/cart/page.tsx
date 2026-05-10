@@ -92,45 +92,54 @@ export default function CartPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 space-y-6">
       {/* Header */}
-      <div className="flex items-center gap-3">
-        <Link href="/menu" className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
-          <ArrowLeft className="w-5 h-5" />
-        </Link>
-        <h1 className="text-2xl font-bold text-white">Checkout</h1>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Link href="/menu" className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-white/5 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <h1 className="text-2xl font-black text-white tracking-tight">Checkout</h1>
+        </div>
+        <div className="px-3 py-1 bg-brand-500/10 border border-brand-500/20 rounded-full">
+          <span className="text-[10px] font-black text-brand-500 uppercase tracking-widest">Bites Pay</span>
+        </div>
       </div>
 
       {/* Cart Items */}
-      <Card>
-        <h3 className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-3">Order Summary</h3>
-        {items.map((item) => (
-          <CartItem key={item.menuItem.id} item={item} />
-        ))}
+      <Card className="p-0 overflow-hidden">
+        <div className="p-4 bg-surface-800 border-b border-white/5">
+          <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest">Your Order</h3>
+        </div>
+        <div className="p-2">
+          {items.map((item) => (
+            <CartItem key={item.menuItem.id} item={item} />
+          ))}
+        </div>
       </Card>
 
       {/* Auth / Wallet State */}
       {!isLoggedIn ? (
-        <Card className="border-brand-500/20 bg-brand-500/5">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-brand-400/10 flex items-center justify-center">
-              <LogIn className="w-5 h-5 text-brand-400" />
+        <Card className="border-brand-500/30 bg-brand-500/5 p-5">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-brand-500 flex items-center justify-center shadow-lg shadow-brand-500/20">
+              <LogIn className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-white">Login to pay with credits</p>
-              <p className="text-xs text-zinc-400">You need an account to place an order.</p>
+              <p className="text-sm font-black text-white">Unlock Bites Credits</p>
+              <p className="text-xs text-zinc-400">Login to use your secure digital wallet.</p>
             </div>
             <Button size="sm" onClick={() => setAuthOpen(true)}>Login</Button>
           </div>
         </Card>
       ) : creditBalance > 0 ? (
-        <Card>
+        <Card className="p-5 border-emerald-500/20 bg-emerald-500/5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-emerald-400/10 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-emerald-400" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 flex items-center justify-center">
+                <Wallet className="w-6 h-6 text-emerald-500" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Canteen Credits</p>
-                <p className="text-xs text-zinc-400">Available: {formatPrice(creditBalance)}</p>
+                <p className="text-sm font-black text-white uppercase tracking-tight">Bites Credits</p>
+                <p className="text-xs text-emerald-500/80 font-medium">Balance: {formatPrice(creditBalance)}</p>
               </div>
             </div>
             {amountToPay > 0 && (
@@ -141,15 +150,15 @@ export default function CartPage() {
           </div>
         </Card>
       ) : (
-        <Card className="border-rose-500/20 bg-rose-500/5">
+        <Card className="p-5 border-rose-500/20 bg-rose-500/5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-400/10 flex items-center justify-center">
-                <Wallet className="w-5 h-5 text-rose-400" />
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-2xl bg-rose-500/20 flex items-center justify-center">
+                <Wallet className="w-6 h-6 text-rose-500" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">No Credits</p>
-                <p className="text-xs text-rose-400/80">Visit the counter to top up your wallet.</p>
+                <p className="text-sm font-black text-white uppercase tracking-tight">Empty Wallet</p>
+                <p className="text-xs text-rose-400/80">Visit counter to add credits.</p>
               </div>
             </div>
             <Link href="/wallet">
@@ -160,28 +169,39 @@ export default function CartPage() {
       )}
 
       {/* Price Breakdown */}
-      <Card>
-        <div className="space-y-3">
-          <div className="flex justify-between text-sm text-zinc-400">
-            <span>Subtotal</span>
+      <Card className="p-6">
+        <h3 className="text-xs font-black text-zinc-500 uppercase tracking-widest mb-4">Bill Details</h3>
+        <div className="space-y-4">
+          <div className="flex justify-between text-sm text-zinc-400 font-medium">
+            <span>Item Total</span>
             <span>{formatPrice(totalAmount)}</span>
           </div>
+          <div className="flex justify-between text-sm text-zinc-400 font-medium">
+            <span>Handling Fee</span>
+            <span className="text-emerald-500">FREE</span>
+          </div>
           {creditsToApply > 0 && (
-            <div className="flex justify-between text-sm text-emerald-400">
-              <span>Credits Applied</span>
+            <div className="flex justify-between text-sm text-emerald-500 font-bold bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+              <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4" /> Bites Credits Applied</span>
               <span>-{formatPrice(creditsToApply)}</span>
             </div>
           )}
-          <div className="border-t border-white/5 pt-3 flex justify-between">
-            <span className="text-base font-semibold text-white">
-              {amountToPay > 0 ? 'Still Need' : 'Total'}
-            </span>
-            <span className="text-xl font-bold gradient-text">
-              {amountToPay > 0 ? formatPrice(amountToPay) : 'FREE ✨'}
-            </span>
+          <div className="border-t border-white/5 pt-4 flex justify-between items-end">
+            <div>
+              <span className="text-xs font-black text-zinc-500 uppercase tracking-widest block mb-1">To Pay</span>
+              <span className="text-2xl font-black text-white">
+                {amountToPay > 0 ? formatPrice(amountToPay) : 'FULLY PAID'}
+              </span>
+            </div>
+            {amountToPay === 0 && (
+              <div className="px-3 py-1 bg-emerald-500/20 border border-emerald-500/30 rounded-lg">
+                <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Instant Confirmation</span>
+              </div>
+            )}
           </div>
         </div>
       </Card>
+
 
       {/* Error */}
       {error && (
