@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ CMRIT Canteen — Skip the Queue
 
-## Getting Started
+A modern, high-performance, credit-based ordering system for the CMRIT Canteen. Designed to eliminate long queues and automate payment verification using an in-app wallet system.
 
-First, run the development server:
+![App Screenshot](https://img.shields.io/badge/Status-Live-emerald)
+![Tech Stack](https://img.shields.io/badge/Stack-Next.js%2015%20|%20Supabase%20|%20Tailwind-orange)
 
+## 🌟 Key Features
+
+### 🛒 Seamless Ordering
+- **Pure Credit System:** No manual UTR verification. Students top up their wallet at the canteen counter and order instantly.
+- **Smart Cart:** Persistent local storage, quantity management, and "Optimistic UI" for instant feedback.
+- **Collection Codes:** Every order generates a secure 4-digit code for quick pick-up.
+
+### 🔐 Secure Authentication
+- **Password Protection:** Phone-based login with hashed passwords (SHA-256) to prevent unauthorized credit usage.
+- **Staff Control:** Dedicated staff dashboard for inventory management, stock resets, and wallet top-ups.
+
+### 🎨 Premium Experience
+- **🌗 Theme Toggle:** Smooth transitions between deep dark mode and clean light mode.
+- **🚀 Performance:** Skeleton loaders, edge caching (1-min revalidation), and atomic database transactions.
+- **📱 Mobile First:** Fully responsive glassmorphism UI designed for student smartphones.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS
+- **Backend:** Supabase (PostgreSQL, Edge Functions, RPC)
+- **Icons:** Lucide React
+- **Persistence:** LocalStorage & Supabase Realtime
+
+## 🚀 Getting Started
+
+### 1. Clone & Install
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/dewernodecimal/CMRIT-Canteen.git
+cd cmrit-canteen
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Copy `.env.example` to `.env.local` and fill in your Supabase credentials:
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+STAFF_PIN=your_4_digit_pin
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Database Setup
+Run the SQL migrations found in `/supabase/migrations` in your Supabase SQL Editor:
+1. `001_initial_schema.sql`
+2. `003_auth_and_fixes.sql`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Run Locally
+```bash
+npm run dev
+```
 
-## Learn More
+## 🛡️ Architecture Highlights
 
-To learn more about Next.js, take a look at the following resources:
+- **Atomic Payments:** Uses PostgreSQL functions (RPC) to ensure credits are only deducted if the item is in stock.
+- **Error Boundaries:** Global error handling to prevent app crashes during network failures.
+- **Persistence:** Cart and Theme state persist across browser sessions.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 👨‍💻 Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is built with love for the CMRIT community. Feel free to open issues or submit PRs!
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+© 2026 CMRIT Canteen Team
