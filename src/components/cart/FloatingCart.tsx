@@ -6,9 +6,10 @@ import { formatPrice } from '@/lib/constants';
 import Link from 'next/link';
 
 export default function FloatingCart() {
-  const { cart, totalItems, totalPrice } = useCart();
+  const { totalItems, totalAmount } = useCart();
 
   if (totalItems === 0) return null;
+
 
   return (
     <div className="fixed bottom-6 left-4 right-4 z-50 animate-slide-up">
@@ -22,8 +23,9 @@ export default function FloatingCart() {
           </div>
           <div>
             <p className="text-xs font-medium text-white/80">{totalItems} {totalItems === 1 ? 'item' : 'items'}</p>
-            <p className="text-sm font-bold text-white">{formatPrice(totalPrice)} plus taxes</p>
+            <p className="text-sm font-bold text-white">{formatPrice(totalAmount)} plus taxes</p>
           </div>
+
         </div>
         
         <div className="flex items-center gap-1 font-black text-sm uppercase tracking-wider">
