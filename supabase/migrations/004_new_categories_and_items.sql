@@ -10,7 +10,6 @@ ALTER TYPE item_category ADD VALUE IF NOT EXISTS 'maggi';
 ALTER TYPE item_category ADD VALUE IF NOT EXISTS 'milkshakes';
 ALTER TYPE item_category ADD VALUE IF NOT EXISTS 'snacks_refreshers';
 ALTER TYPE item_category ADD VALUE IF NOT EXISTS 'juices';
-ALTER TYPE item_category ADD VALUE IF NOT EXISTS 'fruits';
 
 
 -- 2. Insert new menu items
@@ -70,7 +69,3 @@ INSERT INTO menu_items (name, description, price, category, daily_stock_cap, cur
   ('Watermelon Juice',        'Refreshing chilled watermelon juice',                      4000,  'juices', 80, 80),
   ('Lemon Juice',             'Fresh lime juice, sweet or salted',                        3000,  'juices', 100, 100);
 
--- FRUITS
-INSERT INTO menu_items (name, description, price, category, daily_stock_cap, current_stock) VALUES
-  ('Mixed Fruit Bowl',        'Seasonal mixed fruits, freshly cut',                       5000,  'fruits', 40, 40),
-  ('Separate Fruit Bowl',     'Choice of single fruit, freshly cut',                      6000,  'fruits', 40, 40);
