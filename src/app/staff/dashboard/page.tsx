@@ -15,6 +15,7 @@ import Badge from '@/components/ui/Badge';
 import { formatPrice, ORDER_STATUS_CONFIG } from '@/lib/constants';
 import type { OrderWithItems, OrderStatus } from '@/types';
 import { createClient } from '@/lib/supabase/client';
+import { useShopStatus } from '@/hooks/useShopStatus';
 
 export default function StaffDashboard() {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
@@ -22,6 +23,9 @@ export default function StaffDashboard() {
   const [updating, setUpdating] = useState<string | null>(null);
   const [staffPin, setStaffPin] = useState('');
   
+  const { status, isActuallyOpen, refreshStatus } = useShopStatus();
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState(false);
+
   // Top-up state
   const [topUpPhone, setTopUpPhone] = useState('');
   const [topUpAmount, setTopUpAmount] = useState('');
@@ -30,6 +34,29 @@ export default function StaffDashboard() {
   useEffect(() => {
     setStaffPin(sessionStorage.getItem('staff_pin') || '');
   }, []);
+
+  const toggleShopManual = async () => {
+    if (!status) return;
+    setIsUpdatingStatus(true);
+    try {
+      await fetch('/api/settings', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-staff-pin': staffPin,
+        },
+        body: JSON.stringify({
+          ...status,
+          manual_close: !status.manual_close
+        }),
+      });
+      await refreshStatus();
+    } catch (err) {
+      console.error('Failed to toggle shop status:', err);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -171,6 +198,77 @@ export default function StaffDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Shop Management */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card className="p-6 border-brand-500/10 bg-brand-50/50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg ${isActuallyOpen ? 'bg-emerald-500 shadow-emerald-500/20' : 'bg-rose-500 shadow-rose-500/20'}`}>
+                <Clock className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <p className="text-sm font-black text-text-primary uppercase tracking-tight">Shop Status</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className={`w-2 h-2 rounded-full ${isActuallyOpen ? 'bg-emerald-500' : 'bg-rose-500'}`} />
+                  <span className="text-xs font-bold text-text-secondary uppercase">
+                    {isActuallyOpen ? 'Accepting Orders' : 'Currently Closed'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <Button
+              variant={status?.manual_close ? 'primary' : 'danger'}
+              size="sm"
+              onClick={toggleShopManual}
+              isLoading={isUpdatingStatus}
+              className="font-black uppercase tracking-widest text-[10px]"
+            >
+              {status?.manual_close ? 'Open Shop' : 'Pause Orders'}
+            </Button>
+          </div>
+          <div className="mt-4 pt-4 border-t border-surface-700 flex items-center justify-between text-[10px] font-black text-text-secondary uppercase tracking-widest">
+            <span>Manual Status Override</span>
+            <span>Status: {status?.manual_close ? 'PAUSED' : 'LIVE'}</span>
+          </div>
+        </Card>
+
+        {/* Top Up Credits Form */}
+        <Card className="border-emerald-500/20 bg-emerald-50 p-6 flex flex-col justify-center">
+          <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row items-end gap-3">
+            <div className="flex-1 w-full">
+              <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">Top Up Wallet (Phone)</label>
+              <input
+                type="tel"
+                placeholder="10-digit number"
+                value={topUpPhone}
+                onChange={(e) => setTopUpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                className="w-full h-10 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none text-xs font-bold tracking-wider transition-all"
+                required
+              />
+            </div>
+            <div className="w-full sm:w-24">
+              <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">₹</label>
+              <input
+                type="number"
+                placeholder="100"
+                value={topUpAmount}
+                onChange={(e) => setTopUpAmount(e.target.value)}
+                className="w-full h-10 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none text-xs font-bold transition-all"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="primary"
+              className="w-full sm:w-auto h-10 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 px-6 font-black uppercase tracking-widest text-[10px]"
+              isLoading={isToppingUp}
+            >
+              Add
+            </Button>
+          </form>
+        </Card>
+      </div>
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>

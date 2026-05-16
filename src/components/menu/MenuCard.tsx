@@ -10,20 +10,22 @@ import type { MenuItem } from '@/types';
 interface MenuCardProps {
   item: MenuItem;
   demandCount?: number;
+  isShopOpen?: boolean;
 }
 
-export default function MenuCard({ item, demandCount = 0 }: MenuCardProps) {
+export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: MenuCardProps) {
   const { addItem, removeItem, updateQuantity, getItemQuantity } = useCart();
   const quantity = getItemQuantity(item.id);
   const isSoldOut = !item.is_available || item.current_stock <= 0;
   const isHighDemand = demandCount >= 10;
+  const canOrder = isShopOpen && !isSoldOut;
 
   return (
     <div
       className={`
         glass rounded-[var(--radius-card)] overflow-hidden
         transition-all duration-300 group
-        ${isSoldOut ? 'opacity-60' : 'hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1'}
+        ${!canOrder ? 'opacity-60' : 'hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1'}
       `}
     >
       {/* Image Section */}
@@ -63,12 +65,16 @@ export default function MenuCard({ item, demandCount = 0 }: MenuCardProps) {
           />
         </div>
 
-        {/* Sold out overlay */}
-        {isSoldOut && (
+        {/* Status overlay (Sold out or Closed) */}
+        {!isShopOpen ? (
+          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center">
+             <span className="text-xl font-black text-text-primary tracking-widest uppercase">Closed</span>
+          </div>
+        ) : isSoldOut ? (
           <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center">
             <span className="text-xl font-black text-text-primary tracking-widest uppercase">Sold Out</span>
           </div>
-        )}
+        ) : null}
       </div>
 
       {/* Content Section */}
@@ -88,7 +94,7 @@ export default function MenuCard({ item, demandCount = 0 }: MenuCardProps) {
 
         {/* Footer: Add to Cart */}
         <div className="mt-5 flex items-center justify-end">
-          {!isSoldOut && (
+          {canOrder && (
             <div className="relative">
               {quantity > 0 ? (
                 <div className="flex items-center bg-surface-700 rounded-xl overflow-hidden animate-fade-in border border-surface-600">
@@ -124,10 +130,16 @@ export default function MenuCard({ item, demandCount = 0 }: MenuCardProps) {
               )}
             </div>
           )}
+          {!isShopOpen && (
+            <div className="text-[10px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/5 px-3 py-2 rounded-lg border border-rose-500/10">
+              Closed
+            </div>
+          )}
         </div>
       </div>
-
     </div>
+  );
+}iv>
 
   );
 }

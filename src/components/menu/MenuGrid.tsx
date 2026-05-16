@@ -14,9 +14,15 @@ interface MenuGridProps {
   items: MenuItem[];
   isLoading?: boolean;
   demandMap?: Record<string, number>;
+  isShopOpen?: boolean;
 }
 
-export default function MenuGrid({ items, isLoading = false, demandMap = {} }: MenuGridProps) {
+export default function MenuGrid({ 
+  items, 
+  isLoading = false, 
+  demandMap = {},
+  isShopOpen = true
+}: MenuGridProps) {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filtered, setFiltered] = useState<MenuItem[]>(items);
@@ -117,6 +123,7 @@ export default function MenuGrid({ items, isLoading = false, demandMap = {} }: M
               key={item.id}
               item={item}
               demandCount={demandMap[item.id] ?? 0}
+              isShopOpen={isShopOpen}
             />
           ))}
         </div>

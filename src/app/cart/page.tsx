@@ -6,6 +6,7 @@ import { ArrowLeft, Wallet, ShieldCheck, LogIn, PlusCircle, Clock } from 'lucide
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
+import { useShopStatus } from '@/hooks/useShopStatus';
 import CartItem from '@/components/cart/CartItem';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -16,6 +17,7 @@ export default function CartPage() {
   const router = useRouter();
   const { items, totalAmount, clearCart } = useCart();
   const { phone, creditBalance, isLoggedIn, refreshCredits } = usePhone();
+  const { isActuallyOpen, status } = useShopStatus();
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
   const [authOpen, setAuthOpen] = useState(false);
@@ -24,6 +26,10 @@ export default function CartPage() {
   const amountToPay = totalAmount - creditsToApply;
 
   const handleCheckout = async () => {
+    if (!isActuallyOpen) {
+      setError('The canteen is currently closed and not accepting new orders.');
+      return;
+    }
     if (!isLoggedIn || !phone) {
       setAuthOpen(true);
       return;
@@ -241,9 +247,10 @@ export default function CartPage() {
           className="w-full shadow-2xl shadow-brand-500/30"
           onClick={handleCheckout}
           isLoading={isProcessing}
+          disabled={!isActuallyOpen}
           icon={<ShieldCheck className="w-5 h-5" />}
         >
-          Place Order (Deduct {formatPrice(creditsToApply)})
+          {isActuallyOpen ? `Place Order (Deduct ${formatPrice(creditsToApply)})` : 'Canteen Closed'}
         </Button>
       )}
 
