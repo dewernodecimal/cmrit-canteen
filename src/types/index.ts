@@ -2,7 +2,7 @@
 // CMRIT Canteen — Shared Type Definitions
 // ============================================================
 
-export type ItemCategory = 'snacks' | 'meals' | 'beverages' | 'desserts';
+export type ItemCategory = 'snacks' | 'meals' | 'beverages' | 'desserts' | 'sandwiches' | 'burgers' | 'maggi' | 'milkshakes' | 'snacks_refreshers' | 'juices' | 'fruits';
 
 export type OrderStatus =
   | 'pending_payment'

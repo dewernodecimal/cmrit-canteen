@@ -63,11 +63,18 @@ export const CATEGORY_CONFIG: Record<
   string,
   { label: string; emoji: string }
 > = {
-  all: { label: 'All', emoji: '🍽️' },
-  snacks: { label: 'Snacks', emoji: '🍿' },
-  meals: { label: 'Meals', emoji: '🍛' },
-  beverages: { label: 'Beverages', emoji: '☕' },
-  desserts: { label: 'Desserts', emoji: '🍰' },
+  all:               { label: 'All',               emoji: '🍽️' },
+  sandwiches:        { label: 'Sandwiches',         emoji: '🥪' },
+  burgers:           { label: 'Burgers',            emoji: '🍔' },
+  maggi:             { label: 'Maggi',              emoji: '🍜' },
+  milkshakes:        { label: 'Milkshakes & Drinks', emoji: '🥤' },
+  snacks_refreshers: { label: 'Snacks & Refreshers', emoji: '🍟' },
+  juices:            { label: 'Juices',             emoji: '🧃' },
+  fruits:            { label: 'Fruits',             emoji: '�' },
+  meals:             { label: 'Meals',              emoji: '🍛' },
+  snacks:            { label: 'Snacks',             emoji: '🍿' },
+  beverages:         { label: 'Beverages',          emoji: '☕' },
+  desserts:          { label: 'Desserts',           emoji: '🍰' },
 };
 
 // Format paise to rupees display string
