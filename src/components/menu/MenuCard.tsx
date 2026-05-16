@@ -139,7 +139,4 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
       </div>
     </div>
   );
-}iv>
-
-  );
 }
