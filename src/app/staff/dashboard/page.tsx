@@ -289,43 +289,6 @@ export default function StaffDashboard() {
         </Button>
       </div>
 
-      {/* Top Up Credits Form */}
-      <Card className="border-emerald-500/20 bg-emerald-50 p-6">
-        <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row items-end gap-4">
-          <div className="flex-1 w-full">
-            <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">Student Phone Number</label>
-            <input
-              type="tel"
-              placeholder="10-digit number"
-              value={topUpPhone}
-              onChange={(e) => setTopUpPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-              className="w-full h-12 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm font-bold tracking-wider transition-all"
-              required
-            />
-          </div>
-          <div className="flex-1 w-full">
-            <label className="block text-[10px] font-black text-emerald-700 mb-2 uppercase tracking-widest">Amount (₹)</label>
-            <input
-              type="number"
-              placeholder="e.g. 100"
-              value={topUpAmount}
-              onChange={(e) => setTopUpAmount(e.target.value)}
-              className="w-full h-12 px-4 rounded-xl bg-surface-700 border border-emerald-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm font-bold transition-all"
-              min="1"
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full sm:w-auto h-12 bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/20 px-8 font-black uppercase tracking-widest text-xs"
-            isLoading={isToppingUp}
-          >
-            Add Credits
-          </Button>
-        </form>
-      </Card>
-
       {/* Empty state */}
       {orders.length === 0 && !isLoading && (
         <div className="text-center py-24 bg-surface-800 rounded-3xl border border-surface-700">
