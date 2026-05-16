@@ -67,9 +67,6 @@ export default function OrderPage({
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-text-primary">Order Status</h1>
-          <p className="text-xs text-text-secondary font-mono">
-            #{String(order.id || '').slice(0, 8)}
-          </p>
         </div>
       </div>
 
