@@ -139,6 +139,14 @@ export default function OrderPage({
         )}
       </Card>
 
+      {/* Disclaimer */}
+      <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20">
+        <Clock className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+        <p className="text-xs text-amber-600 font-semibold leading-relaxed">
+          <span className="font-black">Pick up within 10–15 minutes.</span> The canteen is not responsible for food quality if collected after this window.
+        </p>
+      </div>
+
       {/* Placed At */}
       <div className="text-center text-xs text-text-secondary">
         {mounted
