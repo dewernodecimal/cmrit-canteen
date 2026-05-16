@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
     }
 
-    if (!amount || amount <= 0) {
-      return NextResponse.json({ error: 'Amount must be greater than 0' }, { status: 400 });
+    if (!amount || amount <= 0 || amount > 500000) {
+      return NextResponse.json({ error: 'Amount must be between ₹1 and ₹5000' }, { status: 400 });
     }
 
     const supabase = createAdminClient();

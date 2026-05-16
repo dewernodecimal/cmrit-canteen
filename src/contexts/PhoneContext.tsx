@@ -38,7 +38,10 @@ export function PhoneProvider({ children }: { children: ReactNode }) {
 
   const fetchCredits = useCallback(async (phoneNum: string) => {
     try {
-      const res = await fetch(`/api/credits?phone=${phoneNum}`);
+      const pw = sessionStorage.getItem('__pw') ?? '';
+      const res = await fetch(`/api/credits?phone=${phoneNum}`, {
+        headers: pw ? { 'x-password': pw } : {},
+      });
       if (res.ok) {
         const data = await res.json();
         setCreditBalance(data.credit_balance || 0);
@@ -76,6 +79,8 @@ export function PhoneProvider({ children }: { children: ReactNode }) {
     setCreditBalance(data.credit_balance || 0);
     sessionStorage.setItem(STORAGE_KEYS.PHONE, phoneNum);
     sessionStorage.setItem('is_logged_in', 'true');
+    // Store password for subsequent authenticated requests (session-only, never persisted to disk)
+    sessionStorage.setItem('__pw', password);
     return {};
   }, []);
 
@@ -93,6 +98,7 @@ export function PhoneProvider({ children }: { children: ReactNode }) {
     setCreditBalance(data.credit_balance || 0);
     sessionStorage.setItem(STORAGE_KEYS.PHONE, phoneNum);
     sessionStorage.setItem('is_logged_in', 'true');
+    sessionStorage.setItem('__pw', password);
     return {};
   }, []);
 
@@ -102,6 +108,7 @@ export function PhoneProvider({ children }: { children: ReactNode }) {
     setCreditBalance(0);
     sessionStorage.removeItem(STORAGE_KEYS.PHONE);
     sessionStorage.removeItem('is_logged_in');
+    sessionStorage.removeItem('__pw');
   }, []);
 
   // Legacy compat

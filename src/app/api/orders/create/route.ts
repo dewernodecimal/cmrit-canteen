@@ -4,7 +4,23 @@ import { createAdminClient } from '@/lib/supabase/server';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { phone, items, use_credits, utr_number } = body;
+    const { phone, items } = body;
+
+    // ── 0. Check if the shop is currently accepting orders ─────────────────────
+    const supabasePublic = createAdminClient();
+    const { data: shopSettings } = await supabasePublic
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'shop_status')
+      .single();
+
+    if (shopSettings?.value?.manual_close === true) {
+      return NextResponse.json(
+        { error: 'The canteen is currently closed and not accepting orders. Please try again later.' },
+        { status: 503 }
+      );
+    }
+    // ───────────────────────────────────────────────────────────────────────────
 
     // Validate phone
     if (!phone || !/^\d{10}$/.test(phone)) {
