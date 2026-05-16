@@ -28,7 +28,11 @@ const steps = [
 ];
 
 
+import { useShopStatus } from '@/hooks/useShopStatus';
+
 export default function HomePage() {
+  const { isActuallyOpen } = useShopStatus();
+
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
@@ -40,9 +44,13 @@ export default function HomePage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
           <div className="text-center space-y-6 animate-slide-up">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-sm text-brand-500 font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              Kitchen is Live
+            <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider ${
+              isActuallyOpen 
+                ? 'bg-brand-500/10 border-brand-500/20 text-brand-500' 
+                : 'bg-rose-500/10 border-rose-500/20 text-rose-500'
+            }`}>
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isActuallyOpen ? 'bg-emerald-500 shadow-glow' : 'bg-rose-500'}`} />
+              {isActuallyOpen ? 'Kitchen is Live' : 'Currently Closed'}
             </div>
 
             {/* Heading */}

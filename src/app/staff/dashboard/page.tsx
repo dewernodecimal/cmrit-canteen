@@ -39,7 +39,7 @@ export default function StaffDashboard() {
     if (!status) return;
     setIsUpdatingStatus(true);
     try {
-      await fetch('/api/settings', {
+      const res = await fetch('/api/settings', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -50,9 +50,16 @@ export default function StaffDashboard() {
           manual_close: !status.manual_close
         }),
       });
-      await refreshStatus();
+      
+      if (!res.ok) {
+        const data = await res.json();
+        alert(`Error: ${data.error || 'Failed to update shop status'}`);
+      } else {
+        await refreshStatus();
+      }
     } catch (err) {
       console.error('Failed to toggle shop status:', err);
+      alert('Network error: Could not reach server');
     } finally {
       setIsUpdatingStatus(false);
     }
