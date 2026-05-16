@@ -6,7 +6,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { ShoppingBag, UtensilsCrossed, Wallet, LogIn, LogOut, PlusCircle, Sun, Moon, ClipboardList } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { usePhone } from '@/contexts/PhoneContext';
-import { useOrders } from '@/hooks/useOrders';
+import { useOngoingOrdersCount } from '@/hooks/useOrders';
 import { formatPrice } from '@/lib/constants';
 import CartDrawer from '@/components/cart/CartDrawer';
 import AuthModal from '@/components/AuthModal';
@@ -16,13 +16,9 @@ export default function Navbar() {
   const [authOpen, setAuthOpen] = useState(false);
   const { totalItems } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
-  const { orders } = useOrders(phone);
+  const ongoingOrdersCount = useOngoingOrdersCount(phone);
   const pathname = usePathname();
   const router = useRouter();
-
-  const ongoingOrdersCount = orders.filter((o) =>
-    ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress', 'ready'].includes(o.status)
-  ).length;
 
   // Don't show navbar on staff pages
   if (pathname.startsWith('/staff')) return null;
