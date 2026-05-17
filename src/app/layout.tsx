@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   description:
     'Order delicious bites from CMRIT Canteen in seconds. Skip the queue with our premium credit-based wallet system. Faster than Blinkit, better than Zomato.',
   keywords: ['CMRIT', 'Bites', 'food ordering', 'college canteen', 'skip queue'],
+  manifest: '/manifest.json',
   openGraph: {
     title: 'CMRIT Bites — Good Food, Instantly',
     description: 'Order food from CMRIT Canteen in seconds. No app download needed.',
@@ -29,6 +30,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
+  userScalable: false,
   themeColor: '#FEF9F5',
 };
 

@@ -31,9 +31,42 @@ export default function StaffDashboard() {
   const [topUpAmount, setTopUpAmount] = useState('');
   const [isToppingUp, setIsToppingUp] = useState(false);
 
+  // Reset Password State
+  const [resetPhone, setResetPhone] = useState('');
+  const [resetPassword, setResetPassword] = useState('');
+  const [isResettingPwd, setIsResettingPwd] = useState(false);
+
   useEffect(() => {
     setStaffPin(sessionStorage.getItem('staff_pin') || '');
   }, []);
+
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetPhone || !resetPassword) return;
+    setIsResettingPwd(true);
+    try {
+      const res = await fetch('/api/staff/reset-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-staff-pin': staffPin,
+        },
+        body: JSON.stringify({ phone: resetPhone, new_password: resetPassword }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert(data.message || 'Password reset successfully');
+        setResetPhone('');
+        setResetPassword('');
+      } else {
+        alert(data.error || 'Failed to reset password');
+      }
+    } catch (err) {
+      alert('Failed to reset password');
+    } finally {
+      setIsResettingPwd(false);
+    }
+  };
 
   const toggleShopManual = async () => {
     if (!status) return;
@@ -205,8 +238,8 @@ export default function StaffDashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Shop Management */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Shop Management & Tools */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="p-6 border-brand-500/10 bg-brand-50/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
@@ -271,6 +304,42 @@ export default function StaffDashboard() {
               isLoading={isToppingUp}
             >
               Add
+            </Button>
+          </form>
+        </Card>
+
+        {/* Reset Password Form */}
+        <Card className="border-blue-500/20 bg-blue-50/50 p-6 flex flex-col justify-center">
+          <form onSubmit={handlePasswordReset} className="flex flex-col sm:flex-row items-end gap-3">
+            <div className="flex-1 w-full">
+              <label className="block text-[10px] font-black text-blue-700 mb-2 uppercase tracking-widest">Reset Password (Phone)</label>
+              <input
+                type="tel"
+                placeholder="Student Phone"
+                value={resetPhone}
+                onChange={(e) => setResetPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                className="w-full h-10 px-4 rounded-xl bg-surface-700 border border-blue-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none text-xs font-bold tracking-wider transition-all"
+                required
+              />
+            </div>
+            <div className="w-full sm:w-28">
+              <label className="block text-[10px] font-black text-blue-700 mb-2 uppercase tracking-widest">New PWD</label>
+              <input
+                type="text"
+                placeholder="e.g. 1234"
+                value={resetPassword}
+                onChange={(e) => setResetPassword(e.target.value)}
+                className="w-full h-10 px-4 rounded-xl bg-surface-700 border border-blue-500/10 text-text-primary placeholder:text-text-secondary focus:outline-none text-xs font-bold transition-all"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              variant="secondary"
+              className="w-full sm:w-auto h-10 bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/20 px-6 font-black uppercase tracking-widest text-[10px] border-none"
+              isLoading={isResettingPwd}
+            >
+              Reset
             </Button>
           </form>
         </Card>

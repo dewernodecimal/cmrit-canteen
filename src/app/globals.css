@@ -48,6 +48,13 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--color-surface-500) transparent;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Prevent pull-to-refresh bouncing in PWA */
+html, body {
+  overscroll-behavior-y: none;
 }
 
 /* Better visible scrollbar for Chrome/Edge on Windows */
