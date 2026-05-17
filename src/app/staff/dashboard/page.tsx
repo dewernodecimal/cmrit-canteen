@@ -138,7 +138,12 @@ export default function StaffDashboard() {
   }, [fetchOrders]);
 
   const updateStatus = async (orderId: string, newStatus: OrderStatus, cancelReason?: string) => {
-    setUpdating(orderId);
+    // 1. Optimistic UI Update: Instantly move the order to the next column
+    setOrders((prev) => 
+      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+    );
+    
+    // 2. Perform the actual API call in the background
     try {
       await fetch('/api/orders', {
         method: 'PATCH',
@@ -152,11 +157,10 @@ export default function StaffDashboard() {
           cancel_reason: cancelReason,
         }),
       });
-      fetchOrders();
+      // No need to fetchOrders() here, Supabase Realtime will catch it if needed.
     } catch (err) {
       console.error('Failed to update order:', err);
-    } finally {
-      setUpdating(null);
+      fetchOrders(); // Revert on failure
     }
   };
 
