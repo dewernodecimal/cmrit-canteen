@@ -112,6 +112,12 @@ export default function AuthModal({ onClose }: AuthModalProps) {
           >
             {mode === 'login' ? 'Login' : 'Create Account'}
           </Button>
+
+          {mode === 'login' && (
+            <p className="text-center text-[10px] text-text-secondary mt-2">
+              Forgot password? Visit the canteen counter for a reset.
+            </p>
+          )}
         </form>
 
         {/* Toggle mode */}
