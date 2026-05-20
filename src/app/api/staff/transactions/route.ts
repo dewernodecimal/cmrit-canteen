@@ -1,0 +1,36 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/server';
+
+export const dynamic = 'force-dynamic';
+
+export async function GET(req: NextRequest) {
+  try {
+    const pin = req.headers.get('x-staff-pin');
+    if (pin !== process.env.STAFF_PIN) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const supabase = createAdminClient();
+
+    // Fetch latest 200 transactions
+    const { data, error } = await supabase
+      .from('transactions')
+      .select(`
+        id,
+        phone,
+        type,
+        amount,
+        note,
+        created_at,
+        order_id
+      `)
+      .order('created_at', { ascending: false })
+      .limit(200);
+
+    if (error) throw error;
+
+    return NextResponse.json(data);
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}

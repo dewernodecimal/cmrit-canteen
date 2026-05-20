@@ -119,6 +119,17 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
             <Package className="w-4 h-4" />
             Inventory
           </Link>
+          <Link
+            href="/staff/transactions"
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
+              pathname === '/staff/transactions'
+                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
+                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
+            }`}
+          >
+            <ShieldCheck className="w-4 h-4" />
+            Transactions
+          </Link>
         </div>
 
         <button
