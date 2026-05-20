@@ -1,6 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 
+async function sendTwilioAlert(orderId: string, collectionCode: string, totalAmount: number) {
+  try {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const staffPhone = process.env.CANTEEN_STAFF_PHONE;
+    
+    if (!accountSid || !authToken || !staffPhone) {
+      console.warn('Twilio configuration or staff phone not found.');
+      return;
+    }
+
+    const authHeader = 'Basic ' + Buffer.from(`${accountSid}:${authToken}`).toString('base64');
+    
+    // 1. Send SMS Alert
+    try {
+      const fromSms = process.env.TWILIO_SMS_FROM || '+14155238886';
+      await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          To: staffPhone,
+          From: fromSms,
+          Body: `🛎️ CMRIT Bites Alert: New order placed!\nCode: ${collectionCode}\nAmount: ₹${(totalAmount / 100).toFixed(2)}\nOrder: #${orderId.slice(0, 8)}\nCheck staff dashboard!`,
+        }).toString(),
+      });
+    } catch (e) {
+      console.error('Twilio SMS failed:', e);
+    }
+
+    // 2. Send WhatsApp Sandbox Alert as Backup (highly reliable with loud chime)
+    try {
+      const fromWa = process.env.TWILIO_WHATSAPP_FROM || 'whatsapp:+14155238886';
+      await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+        method: 'POST',
+        headers: {
+          'Authorization': authHeader,
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          To: `whatsapp:${staffPhone}`,
+          From: fromWa,
+          Body: `🛎️ *CMRIT Bites Alert*\n\nNew order received!\n*Code:* ${collectionCode}\n*Amount:* ₹${(totalAmount / 100).toFixed(2)}\n*Order ID:* #${orderId.slice(0, 8)}\n\nPlease prepare the order and check the staff dashboard!`,
+        }).toString(),
+      });
+    } catch (e) {
+      console.error('Twilio WhatsApp failed:', e);
+    }
+  } catch (err) {
+    console.error('Twilio alert general error:', err);
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -135,6 +190,11 @@ export async function POST(req: NextRequest) {
         error: result?.error || 'Payment failed. Please check your credit balance.' 
       }, { status: 400 });
     }
+
+    // Trigger Twilio SMS & WhatsApp alerts in the background (non-blocking)
+    sendTwilioAlert(order.id, collectionCode, totalAmount).catch((err) => {
+      console.error('Background alert error:', err);
+    });
 
     return NextResponse.json({ order_id: order.id });
 
