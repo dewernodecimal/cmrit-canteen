@@ -121,15 +121,22 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         </form>
 
         {/* Toggle mode */}
-        <p className="text-center text-xs text-text-secondary mt-4">
-          {mode === 'login' ? "Don't have an account? " : 'Already registered? '}
+        <div className="mt-6 pt-6 border-t border-surface-600 flex flex-col items-center gap-3">
+          <p className="text-sm font-medium text-text-secondary">
+            {mode === 'login' ? "New to CMRIT Bites?" : 'Already have an account?'}
+          </p>
           <button
+            type="button"
             onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
-            className="text-brand-500 hover:text-brand-600 font-bold transition-colors"
+            className={`w-full py-3 rounded-xl font-black transition-all ${
+              mode === 'login' 
+                ? 'bg-brand-500/10 text-brand-500 border-2 border-brand-500/50 hover:bg-brand-500/20 hover:border-brand-500 shadow-lg' 
+                : 'text-text-secondary hover:text-text-primary underline'
+            }`}
           >
-            {mode === 'login' ? 'Register' : 'Login'}
+            {mode === 'login' ? 'Create a New Account' : 'Login Here'}
           </button>
-        </p>
+        </div>
 
       </div>
     </div>
