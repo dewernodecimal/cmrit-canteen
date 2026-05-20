@@ -98,6 +98,43 @@ export default function StaffDashboard() {
     }
   };
 
+  const playNotificationSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || (window as any).webkitAudioContext)();
+      
+      const playTone = (freq: number, start: number, duration: number) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, start);
+        
+        gain.gain.setValueAtTime(0.35, start);
+        gain.gain.exponentialRampToValueAtTime(0.01, start + duration);
+        
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        osc.start(start);
+        osc.stop(start + duration);
+      };
+
+      const now = audioCtx.currentTime;
+      // High-attention dual-tone chime (E5 -> A5)
+      playTone(659.25, now, 0.25);
+      playTone(880.00, now + 0.12, 0.45);
+    } catch (err) {
+      console.error('Failed to play notification audio:', err);
+    }
+  };
+
+  const triggerVibrate = () => {
+    if (typeof navigator !== 'undefined' && navigator.vibrate) {
+      // Buzz pattern: 250ms buzz, 100ms pause, 350ms buzz
+      navigator.vibrate([250, 100, 350]);
+    }
+  };
+
   const fetchOrders = useCallback(async () => {
     try {
       const res = await fetch('/api/orders', {
@@ -105,7 +142,19 @@ export default function StaffDashboard() {
       });
       if (res.ok) {
         const data = await res.json();
-        setOrders(data);
+        
+        setOrders((prevOrders) => {
+          // Check if there are new orders with 'confirmed' status
+          const prevConfirmedIds = new Set(prevOrders.filter(o => o.status === 'confirmed').map(o => o.id));
+          const incomingConfirmed = data.filter((o: any) => o.status === 'confirmed');
+          const hasNew = incomingConfirmed.some((o: any) => !prevConfirmedIds.has(o.id));
+          
+          if (hasNew && prevOrders.length > 0) {
+            playNotificationSound();
+            triggerVibrate();
+          }
+          return data;
+        });
       }
     } catch (err) {
       console.error('Failed to fetch orders:', err);
@@ -357,16 +406,30 @@ export default function StaffDashboard() {
             {orders.length} active {orders.length === 1 ? 'order' : 'orders'}
           </p>
         </div>
-        <Button
-          variant="secondary"
-          size="sm"
-          className="font-bold"
-          icon={<RefreshCw className="w-4 h-4" />}
-          onClick={fetchOrders}
-          isLoading={isLoading}
-        >
-          Refresh
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="secondary"
+            size="sm"
+            className="font-bold border border-surface-700 bg-surface-800 text-text-primary hover:bg-surface-700 gap-1.5 px-3"
+            onClick={() => {
+              playNotificationSound();
+              triggerVibrate();
+            }}
+          >
+            🔊 Test Sound
+          </Button>
+          <Button
+            variant="secondary"
+            size="sm"
+            className="font-bold"
+            icon={<RefreshCw className="w-4 h-4" />}
+            onClick={fetchOrders}
+            isLoading={isLoading}
+          >
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {/* Empty state */}
