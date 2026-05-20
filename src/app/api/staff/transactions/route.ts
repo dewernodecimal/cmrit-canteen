@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Fetch latest 200 transactions
+    // Fetch all transactions from the beginning
     const { data, error } = await supabase
       .from('transactions')
       .select(`
@@ -24,8 +24,7 @@ export async function GET(req: NextRequest) {
         created_at,
         order_id
       `)
-      .order('created_at', { ascending: false })
-      .limit(200);
+      .order('created_at', { ascending: false });
 
     if (error) throw error;
 
