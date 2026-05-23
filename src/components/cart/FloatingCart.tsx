@@ -4,11 +4,21 @@ import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/constants';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function FloatingCart() {
   const { totalItems, totalAmount } = useCart();
+  const pathname = usePathname();
 
-  if (totalItems === 0) return null;
+  // Hide the floating cart bar on checkout, order status, and staff counter pages
+  if (
+    totalItems === 0 ||
+    pathname === '/cart' ||
+    pathname.startsWith('/order') ||
+    pathname.startsWith('/staff')
+  ) {
+    return null;
+  }
 
 
   return (

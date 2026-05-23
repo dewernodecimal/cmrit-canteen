@@ -24,7 +24,7 @@ export default function CartItem({ item }: CartItemProps) {
 
       {/* Name + price */}
       <div className="flex-1 min-w-0">
-        <h4 className="text-sm font-bold text-text-primary truncate">
+        <h4 className="text-sm font-bold text-text-primary">
           {menuItem.name}
         </h4>
         <p className="text-xs text-text-secondary mt-0.5">
