@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
 
     // 7. Send push notification to canteen guy via ntfy.sh
     try {
-      const topic = process.env.NTFY_TOPIC || 'cmrit-canteen-orders-dewernodecimal';
+      const topic = process.env.NTFY_TOPIC || 'cmritcanteen';
       const host = req.headers.get('host') || 'cmrit-canteen.vercel.app';
       const protocol = host.includes('localhost') ? 'http' : 'https';
       const clickUrl = `${protocol}://${host}/staff`;
