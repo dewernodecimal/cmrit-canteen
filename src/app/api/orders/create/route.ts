@@ -147,8 +147,9 @@ export async function POST(req: NextRequest) {
         .map((item: any) => `${item.quantity}x ${item.item_name}`)
         .join(', ');
 
-      await fetch(`https://ntfy.sh/${topic}`, {
+      const ntfyRes = await fetch(`https://ntfy.sh/${topic}`, {
         method: 'POST',
+        cache: 'no-store',
         body: `\ud83c\udf7d\ufe0f New Order Received!\nItems: ${itemsSummary}\nTotal: \u20b9${totalAmount}\nCollection Code: ${collectionCode}`,
         headers: {
           'Title': 'New Order Received!',
@@ -157,6 +158,10 @@ export async function POST(req: NextRequest) {
           'Click': clickUrl,
         },
       });
+      const ntfyText = await ntfyRes.text();
+      if (!ntfyRes.ok) {
+        console.error('ntfy error response:', ntfyText);
+      }
     } catch (err) {
       console.error('Failed to send ntfy push notification:', err);
     }
