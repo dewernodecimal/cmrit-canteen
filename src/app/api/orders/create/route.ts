@@ -149,9 +149,9 @@ export async function POST(req: NextRequest) {
 
       await fetch(`https://ntfy.sh/${topic}`, {
         method: 'POST',
-        body: `Items: ${itemsSummary}\nTotal: \u20b9${totalAmount}\nCollection Code: ${collectionCode}`,
+        body: `\ud83c\udf7d\ufe0f New Order Received!\nItems: ${itemsSummary}\nTotal: \u20b9${totalAmount}\nCollection Code: ${collectionCode}`,
         headers: {
-          'Title': '🍽️ New Order Received!',
+          'Title': 'New Order Received!',
           'Priority': 'high',
           'Tags': 'tada,shopping_cart,bell',
           'Click': clickUrl,
