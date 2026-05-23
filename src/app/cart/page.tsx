@@ -61,6 +61,27 @@ export default function CartPage() {
         throw new Error(data.error || 'Failed to create order');
       }
 
+      // Send push notification from the client to bypass Vercel server IP limits
+      try {
+        const topic = process.env.NEXT_PUBLIC_NTFY_TOPIC || 'cmritcanteen';
+        const host = window.location.host;
+        const protocol = window.location.protocol;
+        const clickUrl = `${protocol}//${host}/staff`;
+        
+        await fetch(`https://ntfy.sh/${topic}`, {
+          method: 'POST',
+          body: `\ud83c\udf7d\ufe0f New Order Received!\nItems: ${data.items_summary}\nTotal: \u20b9${data.total_amount}\nCollection Code: ${data.collection_code}`,
+          headers: {
+            'Title': 'New Order Received!',
+            'Priority': 'high',
+            'Tags': 'tada,shopping_cart,bell',
+            'Click': clickUrl,
+          },
+        });
+      } catch (err) {
+        console.error('Client ntfy push failed:', err);
+      }
+
       await refreshCredits();
       clearCart();
       router.push(`/order/${data.order_id}`);

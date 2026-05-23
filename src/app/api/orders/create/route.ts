@@ -136,37 +136,17 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // 7. Send push notification to canteen guy via ntfy.sh
-    try {
-      const topic = process.env.NTFY_TOPIC || 'cmritcanteen';
-      const host = req.headers.get('host') || 'cmrit-canteen.vercel.app';
-      const protocol = host.includes('localhost') ? 'http' : 'https';
-      const clickUrl = `${protocol}://${host}/staff`;
-      
-      const itemsSummary = orderItems
-        .map((item: any) => `${item.quantity}x ${item.item_name}`)
-        .join(', ');
+    const itemsSummary = orderItems
+      .map((item: any) => `${item.quantity}x ${item.item_name}`)
+      .join(', ');
 
-      const ntfyRes = await fetch(`https://ntfy.sh/${topic}`, {
-        method: 'POST',
-        cache: 'no-store',
-        body: `\ud83c\udf7d\ufe0f New Order Received!\nItems: ${itemsSummary}\nTotal: \u20b9${totalAmount}\nCollection Code: ${collectionCode}`,
-        headers: {
-          'Title': 'New Order Received!',
-          'Priority': 'high',
-          'Tags': 'tada,shopping_cart,bell',
-          'Click': clickUrl,
-        },
-      });
-      const ntfyText = await ntfyRes.text();
-      if (!ntfyRes.ok) {
-        console.error('ntfy error response:', ntfyText);
-      }
-    } catch (err) {
-      console.error('Failed to send ntfy push notification:', err);
-    }
-
-    return NextResponse.json({ order_id: order.id });
+    // We will let the client side send the push notification to bypass Vercel's shared IP rate limit on ntfy.sh
+    return NextResponse.json({ 
+      order_id: order.id,
+      collection_code: collectionCode,
+      total_amount: totalAmount,
+      items_summary: itemsSummary
+    });
 
   } catch (err: any) {
     console.error('Create order error:', err);
