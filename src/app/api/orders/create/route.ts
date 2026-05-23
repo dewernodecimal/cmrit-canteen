@@ -136,6 +136,31 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
+    // 7. Send push notification to canteen guy via ntfy.sh
+    try {
+      const topic = process.env.NTFY_TOPIC || 'cmrit-canteen-orders-dewernodecimal';
+      const host = req.headers.get('host') || 'cmrit-canteen.vercel.app';
+      const protocol = host.includes('localhost') ? 'http' : 'https';
+      const clickUrl = `${protocol}://${host}/staff`;
+      
+      const itemsSummary = orderItems
+        .map((item: any) => `${item.quantity}x ${item.item_name}`)
+        .join(', ');
+
+      await fetch(`https://ntfy.sh/${topic}`, {
+        method: 'POST',
+        body: `Items: ${itemsSummary}\nTotal: \u20b9${totalAmount}\nCollection Code: ${collectionCode}`,
+        headers: {
+          'Title': '🍽️ New Order Received!',
+          'Priority': 'high',
+          'Tags': 'tada,shopping_cart,bell',
+          'Click': clickUrl,
+        },
+      });
+    } catch (err) {
+      console.error('Failed to send ntfy push notification:', err);
+    }
+
     return NextResponse.json({ order_id: order.id });
 
   } catch (err: any) {
