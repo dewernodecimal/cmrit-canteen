@@ -16,6 +16,13 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
   const handleAuth = async () => {
+    const lockUntil = localStorage.getItem('staff_lock_until');
+    if (lockUntil && Date.now() < parseInt(lockUntil, 10)) {
+      const remainingSeconds = Math.ceil((parseInt(lockUntil, 10) - Date.now()) / 1000);
+      setError(`Too many attempts. Try again in ${remainingSeconds}s.`);
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -27,8 +34,19 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
       if (res.ok) {
         setAuthenticated(true);
         sessionStorage.setItem('staff_pin', pin);
+        localStorage.removeItem('staff_attempts');
+        localStorage.removeItem('staff_lock_until');
       } else {
-        setError('Invalid PIN');
+        const attempts = parseInt(localStorage.getItem('staff_attempts') || '0', 10) + 1;
+        if (attempts >= 5) {
+          const lockTime = Date.now() + 60 * 1000; // 1 minute lockout
+          localStorage.setItem('staff_lock_until', lockTime.toString());
+          localStorage.setItem('staff_attempts', '0');
+          setError('Too many attempts. Try again in 60s.');
+        } else {
+          localStorage.setItem('staff_attempts', attempts.toString());
+          setError(`Invalid PIN. ${5 - attempts} attempts remaining.`);
+        }
       }
     } catch {
       setError('Connection error');
