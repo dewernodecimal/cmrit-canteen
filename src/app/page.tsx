@@ -1,8 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { ArrowRight, Scan, ShoppingBag, CreditCard, Package } from 'lucide-react';
+import { ArrowRight, CreditCard, Package, Scan, ShoppingBag } from 'lucide-react';
+
 import Button from '@/components/ui/Button';
+import { useShopStatus } from '@/hooks/useShopStatus';
 
 const steps = [
   {
@@ -27,8 +29,6 @@ const steps = [
   },
 ];
 
-
-import { useShopStatus } from '@/hooks/useShopStatus';
 
 export default function HomePage() {
   const { isActuallyOpen } = useShopStatus();
