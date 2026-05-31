@@ -23,98 +23,98 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
   return (
     <div
       className={`
-        glass rounded-[var(--radius-card)] overflow-hidden
-        transition-all duration-300 group
-        ${!canOrder ? 'opacity-60' : 'hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1'}
+        flex flex-row gap-4 p-4 bg-zinc-950 border border-zinc-900 rounded-2xl
+        transition-all duration-300 relative
+        ${!canOrder ? 'opacity-60 grayscale-[0.2]' : ''}
       `}
     >
-      {/* Image Section */}
-      <div className="relative h-48 bg-surface-700 overflow-hidden">
-        {item.image_url ? (
-          <Image
-            src={item.image_url}
-            alt={item.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-5xl bg-surface-600">
-            {item.category === 'snacks' ? '🍿' :
-             item.category === 'meals' ? '🍛' :
-             item.category === 'beverages' ? '☕' : '🍰'}
-          </div>
-        )}
-
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
-
-        {/* Bestseller Badge */}
-        {isHighDemand && !isSoldOut && (
-          <div className="absolute top-3 left-3 bg-brand-500 px-2 py-1 rounded-md shadow-lg shadow-brand-500/20">
-            <span className="text-[10px] font-black text-white tracking-tighter">BESTSELLER</span>
-          </div>
-        )}
-
-        {/* Stock status overlay */}
-        <div className="absolute top-3 right-3">
-          <StockBadge
-            currentStock={item.current_stock}
-            dailyStockCap={item.daily_stock_cap}
-            isAvailable={item.is_available}
-          />
+      {/* Status overlay (Closed) */}
+      {!isShopOpen && (
+        <div className="absolute inset-0 z-20 bg-zinc-950/70 backdrop-blur-[1px] flex items-center justify-center rounded-2xl">
+          <span className="text-lg font-black text-white tracking-widest uppercase">Closed</span>
         </div>
+      )}
 
-        {/* Status overlay (Sold out or Closed) */}
-        {!isShopOpen ? (
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center">
-             <span className="text-xl font-black text-text-primary tracking-widest uppercase">Closed</span>
+      {/* Content Section (Left) */}
+      <div className="flex-1 flex flex-col pt-1">
+        <div className="flex items-center gap-2 mb-1">
+          {/* Veg/Non-Veg Indicator (mocking with a simple square/circle SVG) */}
+          <div className="w-3.5 h-3.5 rounded-sm border-2 border-emerald-500 flex items-center justify-center shrink-0">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           </div>
-        ) : isSoldOut ? (
-          <div className="absolute inset-0 bg-white/70 backdrop-blur-[2px] flex items-center justify-center">
-            <span className="text-xl font-black text-text-primary tracking-widest uppercase">Sold Out</span>
-          </div>
-        ) : null}
-      </div>
-
-      {/* Content Section */}
-      <div className="p-5">
-        <div className="flex justify-between items-start gap-2">
-          <h3 className="font-bold text-text-primary text-lg leading-tight line-clamp-1">{item.name}</h3>
-          <span className="text-lg font-black text-brand-500 shrink-0">
-            {formatPrice(item.price)}
-          </span>
+          {isHighDemand && !isSoldOut && (
+            <span className="text-[10px] font-black text-emerald-500 tracking-tighter uppercase bg-emerald-500/10 px-1.5 py-0.5 rounded">
+              Bestseller
+            </span>
+          )}
         </div>
         
+        <h3 className="font-extrabold text-zinc-100 text-base leading-tight tracking-tight line-clamp-2 mb-1">
+          {item.name}
+        </h3>
+        
+        <span className="text-sm font-bold text-zinc-100 tracking-tight mb-2">
+          {formatPrice(item.price)}
+        </span>
+        
         {item.description && (
-          <p className="text-xs text-text-secondary mt-1.5 line-clamp-2 min-h-[2.5em] leading-relaxed">
+          <p className="text-xs font-medium text-zinc-500 line-clamp-2 leading-relaxed">
             {item.description}
           </p>
         )}
+      </div>
 
-        {/* Footer: Add to Cart */}
-        <div className="mt-5 flex items-center justify-end">
+      {/* Image & Action Section (Right) */}
+      <div className="relative w-[120px] shrink-0 flex flex-col items-center">
+        {/* Image Frame */}
+        <div className="w-full h-[120px] relative rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800/50">
+          {item.image_url ? (
+            <Image
+              src={item.image_url}
+              alt={item.name}
+              fill
+              className="object-cover"
+              sizes="120px"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-4xl">
+              {item.category === 'snacks' ? '🍿' :
+               item.category === 'meals' ? '🍛' :
+               item.category === 'beverages' ? '☕' : '🍰'}
+            </div>
+          )}
+          
+          {/* Stock overlay on image if sold out */}
+          {isShopOpen && isSoldOut && (
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+              <span className="text-[10px] font-black text-white tracking-widest uppercase">Sold Out</span>
+            </div>
+          )}
+        </div>
+
+        {/* Floating Action Button overlapping bottom edge */}
+        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-[100px] z-10">
           {canOrder && (
-            <div className="relative">
+            <>
               {quantity > 0 ? (
-                <div className="flex items-center bg-surface-700 rounded-xl overflow-hidden animate-fade-in border border-surface-600">
+                <div className="flex items-center justify-between h-10 w-full bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-xl">
                   <button
                     onClick={() =>
                       quantity === 1
                         ? removeItem(item.id)
                         : updateQuantity(item.id, quantity - 1)
                     }
-                    className="px-3 py-2 text-brand-500 hover:bg-brand-500/10 transition-colors cursor-pointer"
+                    className="flex-1 h-full flex items-center justify-center text-emerald-500 hover:bg-zinc-800 transition-colors"
                   >
                     <Minus className="w-4 h-4 stroke-[3]" />
                   </button>
-                  <span className="w-6 text-center text-sm font-bold text-text-primary">
+                  <span className="w-6 text-center text-sm font-black text-emerald-500">
                     {quantity}
                   </span>
                   <button
                     onClick={() => addItem(item)}
                     disabled={quantity >= item.current_stock}
-                    className="px-3 py-2 text-brand-500 hover:bg-brand-500/10 transition-colors cursor-pointer disabled:opacity-30"
+                    className="flex-1 h-full flex items-center justify-center text-emerald-500 hover:bg-zinc-800 transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
                   >
                     <Plus className="w-4 h-4 stroke-[3]" />
                   </button>
@@ -122,18 +122,12 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
               ) : (
                 <button
                   onClick={() => addItem(item)}
-                  className="flex items-center gap-1 px-6 py-2 rounded-xl bg-brand-500 text-white text-sm font-black shadow-lg shadow-brand-500/20 hover:bg-brand-600 hover:-translate-y-0.5 transition-all cursor-pointer transform active:scale-95"
+                  className="w-full h-10 flex items-center justify-center bg-white text-emerald-600 text-[13px] font-extrabold uppercase tracking-tight rounded-xl shadow-xl shadow-black/50 hover:bg-zinc-100 transition-colors"
                 >
                   ADD
-                  <Plus className="w-3.5 h-3.5 stroke-[4] ml-1" />
                 </button>
               )}
-            </div>
-          )}
-          {!isShopOpen && (
-            <div className="text-[10px] font-black text-rose-500 uppercase tracking-widest bg-rose-500/5 px-3 py-2 rounded-lg border border-rose-500/10">
-              Closed
-            </div>
+            </>
           )}
         </div>
       </div>

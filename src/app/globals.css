@@ -15,12 +15,12 @@
   --color-brand-600: var(--color-emerald-600);
   --color-brand-700: var(--color-emerald-700);
 
-  /* Surface Colors (Slate) */
-  --color-surface-900: var(--color-slate-950);
-  --color-surface-800: var(--color-slate-900);
-  --color-surface-700: var(--color-slate-800);
-  --color-surface-600: var(--color-slate-700);
-  --color-surface-500: var(--color-slate-600);
+  /* Surface Colors (Zinc - True Ink Slate) */
+  --color-surface-900: var(--color-zinc-950);
+  --color-surface-800: var(--color-zinc-900);
+  --color-surface-700: var(--color-zinc-800);
+  --color-surface-600: var(--color-zinc-700);
+  --color-surface-500: var(--color-zinc-600);
 
   /* Typography */
   --color-text-primary: var(--color-white);
@@ -68,14 +68,14 @@ html, body {
 }
 
 :root {
-  --surface-900: var(--color-slate-950);
-  --surface-800: var(--color-slate-900);
-  --surface-700: var(--color-slate-800);
-  --surface-600: var(--color-slate-700);
-  --surface-500: var(--color-slate-600);
+  --surface-900: var(--color-zinc-950);
+  --surface-800: var(--color-zinc-900);
+  --surface-700: var(--color-zinc-800);
+  --surface-600: var(--color-zinc-700);
+  --surface-500: var(--color-zinc-600);
   --text-primary: #ffffff;
-  --text-secondary: var(--color-zinc-400);
-  --border-color: var(--color-slate-800);
+  --text-secondary: var(--color-zinc-500);
+  --border-color: var(--color-zinc-900);
 }
 
 html {
