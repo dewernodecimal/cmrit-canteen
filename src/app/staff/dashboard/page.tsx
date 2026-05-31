@@ -194,7 +194,7 @@ export default function StaffDashboard() {
     
     // 2. Perform the actual API call in the background
     try {
-      await fetch('/api/orders', {
+      const res = await fetch('/api/orders', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -206,9 +206,14 @@ export default function StaffDashboard() {
           cancel_reason: cancelReason,
         }),
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to update order status');
+      }
       // No need to fetchOrders() here, Supabase Realtime will catch it if needed.
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to update order:', err);
+      alert(`Error updating order: ${err.message || 'Unknown error'}`);
       fetchOrders(); // Revert on failure
     }
   };
