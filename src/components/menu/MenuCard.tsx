@@ -26,13 +26,15 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
       className={`
         flex flex-row gap-4 p-4 bg-zinc-950 border border-zinc-900 rounded-2xl
         transition-all duration-300 relative
-        ${!canOrder ? 'opacity-60 grayscale-[0.2]' : ''}
+        ${!canOrder && isShopOpen ? 'opacity-50' : ''}
       `}
     >
-      {/* Status overlay (Closed) */}
+      {/* Closed banner — shop is closed (not sold out) */}
       {!isShopOpen && (
-        <div className="absolute inset-0 z-20 bg-zinc-950/70 backdrop-blur-[1px] flex items-center justify-center rounded-2xl">
-          <span className="text-lg font-black text-white tracking-widest uppercase">Closed</span>
+        <div className="absolute inset-0 z-20 rounded-2xl bg-zinc-950/50 flex items-center justify-center">
+          <span className="px-3 py-1 rounded-full bg-zinc-900 border border-zinc-700 text-xs font-black text-zinc-400 tracking-widest uppercase">
+            Closed
+          </span>
         </div>
       )}
 

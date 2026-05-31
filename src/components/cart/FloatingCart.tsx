@@ -3,7 +3,6 @@
 import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/constants';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function FloatingCart() {
@@ -33,7 +32,7 @@ export default function FloatingCart() {
           </div>
           <div>
             <p className="text-xs font-medium text-white/80">{totalItems} {totalItems === 1 ? 'item' : 'items'}</p>
-            <p className="text-sm font-bold text-white">{formatPrice(totalAmount)} plus taxes</p>
+            <p className="text-sm font-bold text-white">{formatPrice(totalAmount)}</p>
           </div>
 
         </div>

@@ -105,6 +105,20 @@ h1, h2, h3, h4 {
   color: #000000;
 }
 
+/* Brand gradient — used on primary CTAs and active category chips */
+.gradient-brand {
+  background: linear-gradient(
+    135deg,
+    var(--color-emerald-500) 0%,
+    var(--color-emerald-600) 100%
+  );
+}
+
+/* Glow shadow for the live-indicator dot on the menu header */
+.shadow-glow {
+  box-shadow: 0 0 8px 2px var(--color-emerald-500);
+}
+
 .pill {
   border-radius: 9999px;
 }
