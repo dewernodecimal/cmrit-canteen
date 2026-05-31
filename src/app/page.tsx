@@ -154,6 +154,7 @@ export default function HomePage() {
               WhatsApp Support
             </a>
           </div>
+          {/* Support contact channel detail */}
           <p className="text-xs text-text-secondary/90 font-semibold mt-2">
             Support & Help • +91 9148484559
           </p>
