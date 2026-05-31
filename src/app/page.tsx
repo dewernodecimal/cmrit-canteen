@@ -5,6 +5,7 @@ import { ArrowRight, CreditCard, Package, Scan, ShoppingBag } from 'lucide-react
 
 import Button from '@/components/ui/Button';
 import { useShopStatus } from '@/hooks/useShopStatus';
+import { useEffect, useState } from 'react';
 
 /**
  * Interactive steps workflow displaying how to use the canteen web application.
@@ -43,14 +44,26 @@ const steps = [
  */
 export default function HomePage() {
   const { isActuallyOpen } = useShopStatus();
+  const [stats, setStats] = useState({ users: 98, volume: 6145 });
+
+  useEffect(() => {
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        if (data.users !== undefined && data.volume !== undefined) {
+          setStats(data);
+        }
+      })
+      .catch(err => console.error('Failed to fetch stats:', err));
+  }, []);
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
       <section className="relative overflow-hidden">
         {/* Background gradient blobs */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-brand-600/8 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-emerald-600/10 rounded-full blur-3xl" />
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
           <div className="text-center space-y-6 animate-slide-up">
@@ -62,34 +75,34 @@ export default function HomePage() {
             */}
             <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 mb-2 animate-pulse hover:scale-[1.03] transition-transform duration-300">
               <span className="inline-flex items-center gap-1.5">
-                <span className="text-base">💰</span> Over ₹6,145+ in transaction volume
+                <span className="text-base">💰</span> Over ₹{stats.volume.toLocaleString()}+ in transaction volume
               </span>
               <span className="text-emerald-500/30 hidden sm:inline">•</span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="text-base">👥</span> 98+ hungry students registered
+                <span className="text-base">👥</span> {stats.users}+ hungry students registered
               </span>
             </div>
             
             {/* Badge */}
             <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider ${
               isActuallyOpen 
-                ? 'bg-brand-500/10 border-brand-500/20 text-brand-500' 
+                ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-500' 
                 : 'bg-rose-500/10 border-rose-500/20 text-rose-500'
             }`}>
-              <span className={`w-2 h-2 rounded-full animate-pulse ${isActuallyOpen ? 'bg-emerald-500 shadow-glow' : 'bg-rose-500'}`} />
+              <span className={`w-2 h-2 rounded-full animate-pulse ${isActuallyOpen ? 'bg-emerald-500' : 'bg-rose-500'}`} />
               {isActuallyOpen ? 'Kitchen is Live' : 'Currently Closed'}
             </div>
 
             {/* Heading */}
             <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-text-primary leading-[1.1] tracking-tight">
               Craving something? <br />
-              <span className="gradient-text">CMRIT Bites.</span>
+              <span className="text-emerald-500">CMRIT Bites.</span>
             </h1>
 
             {/* Subtitle */}
             <p className="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
               The fastest way to grab a meal. Skip the long lines at the counter. 
-              Order, pay with <span className="text-brand-500 font-bold">Bites Credits</span>, and pick up in style.
+              Order, pay with <span className="text-emerald-500 font-bold">Bites Credits</span>, and pick up in style.
             </p>
 
 
@@ -115,17 +128,17 @@ export default function HomePage() {
           {steps.map((step, idx) => (
             <div
               key={step.title}
-              className="glass rounded-[var(--radius-card)] p-6 text-center group 
-                         hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 
+              className="bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-xl p-6 text-center group 
+                         hover:bg-slate-900/80 hover:border-slate-700 hover:-translate-y-1 
                          transition-all duration-300"
             >
               {/* Step number */}
-              <div className="text-xs font-mono text-brand-500/60 mb-3">
+              <div className="text-xs font-mono text-emerald-500/60 mb-3">
                 0{idx + 1}
               </div>
               {/* Icon */}
-              <div className="w-14 h-14 rounded-2xl gradient-brand mx-auto flex items-center justify-center mb-4 shadow-lg shadow-brand-500/10 group-hover:shadow-brand-500/20 transition-shadow">
-                <span className="text-white">{step.icon}</span>
+              <div className="w-14 h-14 rounded-xl bg-slate-800 border border-slate-700 mx-auto flex items-center justify-center mb-4 shadow-sm group-hover:bg-emerald-500/10 group-hover:border-emerald-500/20 transition-colors">
+                <span className="text-emerald-500">{step.icon}</span>
               </div>
               {/* Text */}
               <h3 className="text-base font-semibold text-text-primary mb-2">
@@ -142,8 +155,8 @@ export default function HomePage() {
 
       {/* Support Section */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
-        <div className="bg-surface-800 border border-brand-500/20 rounded-[var(--radius-card)] p-8 text-center space-y-4 
-                        shadow-xl shadow-brand-500/5 transition-all duration-300">
+        <div className="bg-slate-900 border border-emerald-500/20 rounded-xl p-8 text-center space-y-4 
+                        shadow-lg shadow-emerald-500/5 transition-all duration-300">
           <h2 className="text-xl font-bold text-text-primary">Need Help?</h2>
           <p className="text-text-secondary text-sm">
             Payment failed? Money deducted but no token? Don't worry! We've got your back.
@@ -166,7 +179,7 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-black/5 py-12">
+      <footer className="border-t border-slate-800 py-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 text-center">
           <h3 className="text-lg font-black text-text-primary/10 mb-4 tracking-widest uppercase">CMRIT Bites</h3>
           <p className="text-[10px] text-text-secondary uppercase tracking-widest font-bold">
