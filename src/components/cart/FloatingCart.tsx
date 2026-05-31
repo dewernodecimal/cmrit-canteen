@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 export default function FloatingCart() {
-  const { totalItems, totalAmount } = useCart();
+  const { totalItems, totalAmount, setIsCartOpen } = useCart();
   const pathname = usePathname();
 
   // Hide the floating cart bar on checkout, order status, and staff counter pages
@@ -23,9 +23,9 @@ export default function FloatingCart() {
 
   return (
     <div className="fixed bottom-6 left-4 right-4 z-50 animate-slide-up">
-      <Link 
-        href="/cart"
-        className="flex items-center justify-between bg-brand-500 text-white p-4 rounded-2xl shadow-2xl shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all group"
+      <button 
+        onClick={() => setIsCartOpen(true)}
+        className="w-full flex items-center justify-between bg-brand-500 text-white p-4 rounded-2xl shadow-2xl shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all group"
       >
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
@@ -42,7 +42,7 @@ export default function FloatingCart() {
           View Cart
           <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
         </div>
-      </Link>
+      </button>
     </div>
   );
 }

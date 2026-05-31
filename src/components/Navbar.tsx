@@ -12,9 +12,8 @@ import CartDrawer from '@/components/cart/CartDrawer';
 import AuthModal from '@/components/AuthModal';
 
 export default function Navbar() {
-  const [cartOpen, setCartOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
-  const { totalItems } = useCart();
+  const { totalItems, isCartOpen, setIsCartOpen } = useCart();
   const { phone, creditBalance, isLoggedIn, logout } = usePhone();
   const ongoingOrdersCount = useOngoingOrdersCount(phone);
   const pathname = usePathname();
@@ -109,7 +108,7 @@ export default function Navbar() {
 
               {/* Cart button */}
               <button
-                onClick={() => setCartOpen(true)}
+                onClick={() => setIsCartOpen(true)}
                 className="relative p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer group"
               >
                 <ShoppingBag className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500 transition-colors" />
@@ -126,7 +125,7 @@ export default function Navbar() {
       </nav>
 
 
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
     </>
   );
