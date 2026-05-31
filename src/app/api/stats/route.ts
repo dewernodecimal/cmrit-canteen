@@ -14,23 +14,17 @@ export async function GET() {
 
     if (profileError) throw profileError;
 
-    // 2. Get transaction volume over the past two weeks
-    const twoWeeksAgo = new Date();
-    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
-    
-    // We sum up 'total_amount' for all completed orders
-    const { data: orders, error: txnError } = await supabase
+    // 2. Get count of successfully completed orders (all time)
+    const { count: orderCount, error: txnError } = await supabase
       .from('orders')
-      .select('total_amount')
-      .gte('created_at', twoWeeksAgo.toISOString());
+      .select('*', { count: 'exact', head: true })
+      .eq('status', 'completed');
 
     if (txnError) throw txnError;
 
-    const totalVolume = orders?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0;
-
     return NextResponse.json({
       users: count || 0,
-      volume: totalVolume
+      orders: orderCount || 0
     });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

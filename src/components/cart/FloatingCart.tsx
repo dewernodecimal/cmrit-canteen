@@ -4,13 +4,16 @@ import { ShoppingBag, ChevronRight } from 'lucide-react';
 import { useCart } from '@/contexts/CartContext';
 import { formatPrice } from '@/lib/constants';
 import { usePathname } from 'next/navigation';
+import { usePhone } from '@/contexts/PhoneContext';
 
 export default function FloatingCart() {
   const { totalItems, totalAmount, isCartOpen, setIsCartOpen } = useCart();
+  const { isLoggedIn } = usePhone();
   const pathname = usePathname();
 
-  // Hide the floating cart bar on checkout, order status, and staff counter pages
+  // Only show for logged-in users with items in cart, and not on certain pages
   if (
+    !isLoggedIn ||
     totalItems === 0 ||
     isCartOpen ||
     pathname === '/cart' ||

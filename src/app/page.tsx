@@ -44,15 +44,15 @@ const steps = [
  */
 export default function HomePage() {
   const { isActuallyOpen } = useShopStatus();
-  const [stats, setStats] = useState({ users: 98, volume: 6145 });
+  const [stats, setStats] = useState({ users: 0, orders: 0 });
 
   useEffect(() => {
     fetch('/api/stats')
       .then(res => res.json())
       .then(data => {
-        if (data.users !== undefined && data.volume !== undefined) {
-          setStats(data);
-        }
+        if (data.users !== undefined) {
+            setStats({ users: data.users, orders: data.orders ?? 0 });
+          }
       })
       .catch(err => console.error('Failed to fetch stats:', err));
   }, []);
@@ -75,11 +75,11 @@ export default function HomePage() {
             */}
             <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 mb-2 animate-pulse hover:scale-[1.03] transition-transform duration-300">
               <span className="inline-flex items-center gap-1.5">
-                <span className="text-base">💰</span> Over ₹{stats.volume.toLocaleString()}+ in transaction volume
+                <span className="text-base">🍽️</span> {stats.orders > 0 ? `${stats.orders}+ orders fulfilled` : 'Trusted by CMRIT students'}
               </span>
               <span className="text-emerald-500/30 hidden sm:inline">•</span>
               <span className="inline-flex items-center gap-1.5">
-                <span className="text-base">👥</span> {stats.users}+ hungry students registered
+                <span className="text-base">👥</span> {stats.users > 0 ? `${stats.users}+` : '99+'} hungry students registered
               </span>
             </div>
             
