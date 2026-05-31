@@ -71,6 +71,8 @@ export function useOrders(phone: string | null) {
               toast.error('Order cancelled by canteen. Credits refunded.');
             } else if (payload.new.status === 'ready') {
               toast.success('Your order is ready for pickup!');
+            } else if (payload.new.status === 'completed') {
+              toast.success('Order collected! Enjoy your meal! 😋');
             }
             
             setOrders((prev) =>
@@ -178,10 +180,10 @@ export function useOrder(orderId: string) {
       )
       .subscribe();
 
-    // Fallback polling (every 5 seconds) just in case WebSockets fail
+    // Fallback polling (every 4 seconds) just in case WebSockets fail
     const pollInterval = setInterval(() => {
       fetchOrder();
-    }, 20000);
+    }, 4000);
 
     return () => {
       supabase.removeChannel(channel);

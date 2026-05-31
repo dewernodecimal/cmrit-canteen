@@ -42,8 +42,8 @@ export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
   return (
     <div className="flex items-center justify-between w-full">
       {steps.map((step, idx) => {
-        const isCompleted = idx < currentIdx;
-        const isCurrent = idx === currentIdx;
+        const isCompleted = currentStatus === 'completed' ? idx <= currentIdx : idx < currentIdx;
+        const isCurrent = currentStatus === 'completed' ? false : idx === currentIdx;
         const isPending = idx > currentIdx;
 
         return (
