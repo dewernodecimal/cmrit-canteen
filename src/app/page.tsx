@@ -99,7 +99,9 @@ export default function HomePage() {
           {steps.map((step, idx) => (
             <div
               key={step.title}
-              className="glass rounded-[var(--radius-card)] p-6 text-center group hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 transition-all duration-300"
+              className="glass rounded-[var(--radius-card)] p-6 text-center group 
+                         hover:shadow-[var(--shadow-elevated)] hover:-translate-y-1 
+                         transition-all duration-300"
             >
               {/* Step number */}
               <div className="text-xs font-mono text-brand-500/60 mb-3">
