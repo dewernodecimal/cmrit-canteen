@@ -35,3 +35,6 @@
 
 # Static assets and public resources
 /public/ @vedug
+
+# Tailwind styling configuration
+/tailwind.config.ts @vedug
