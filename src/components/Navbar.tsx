@@ -25,17 +25,17 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-30 glass border-b border-white/5">
+      <nav className="sticky top-0 z-30 bg-slate-950/80 backdrop-blur-md border-b border-slate-800">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="w-10 h-10 rounded-xl gradient-brand flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:shadow-brand-500/40 transition-shadow">
+              <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center shadow-sm transition-shadow">
                 <UtensilsCrossed className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h1 className="text-lg font-extrabold text-primary leading-tight tracking-tight">
-                  CMRIT <span className="gradient-text">Bites</span>
+                  CMRIT <span className="text-emerald-500">Bites</span>
                 </h1>
               </div>
 
@@ -57,7 +57,7 @@ export default function Navbar() {
                   {/* Add Credits link */}
                   <Link
                     href="/wallet"
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-xs font-medium text-brand-400 hover:bg-brand-500/20 transition-colors"
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                   >
                     <PlusCircle className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">Add Credits</span>
@@ -67,7 +67,7 @@ export default function Navbar() {
                   <button
                     onClick={logout}
                     title="Logout"
-                    className="p-2 rounded-xl glass-light hover:bg-surface-600 transition-colors text-zinc-400 hover:text-white"
+                    className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors text-zinc-400 hover:text-white"
                   >
                     <LogOut className="w-4 h-4" />
                   </button>
@@ -75,7 +75,7 @@ export default function Navbar() {
               ) : (
                 <button
                   onClick={() => setAuthOpen(true)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-xs font-medium text-brand-400 hover:bg-brand-500/20 transition-colors"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-medium text-emerald-400 hover:bg-emerald-500/20 transition-colors"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   Login / Register
@@ -93,15 +93,15 @@ export default function Navbar() {
                 }}
                 className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full border transition-all ${
                   pathname === '/orders'
-                    ? 'bg-brand-500 text-white border-brand-500 shadow-lg shadow-brand-500/20'
-                    : 'bg-surface-700 border-surface-600 text-text-secondary hover:text-text-primary hover:bg-surface-600'
+                    ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm'
+                    : 'bg-slate-800 border-slate-700 text-zinc-400 hover:text-white hover:bg-slate-700'
                 }`}
                 title="My Orders"
               >
                 <ClipboardList className={`w-3.5 h-3.5 ${pathname === '/orders' ? 'text-white' : ''}`} />
                 <span className="hidden sm:inline font-bold text-[10px] uppercase tracking-wider">Orders</span>
                 {ongoingOrdersCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-[9px] font-black text-white flex items-center justify-center shadow-md animate-fade-in border-2 border-surface-900">
+                  <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-[9px] font-black text-white flex items-center justify-center shadow-sm animate-fade-in border-2 border-slate-950">
                     {ongoingOrdersCount > 9 ? '9+' : ongoingOrdersCount}
                   </span>
                 )}
@@ -110,11 +110,11 @@ export default function Navbar() {
               {/* Cart button */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative p-2.5 rounded-xl glass-light hover:bg-surface-600 transition-colors cursor-pointer group"
+                className="relative p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 transition-colors cursor-pointer group"
               >
-                <ShoppingBag className="w-5 h-5 text-zinc-500 group-hover:text-brand-500 transition-colors" />
+                <ShoppingBag className="w-5 h-5 text-zinc-500 group-hover:text-emerald-500 transition-colors" />
                 {totalItems > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full gradient-brand text-[10px] font-bold text-white flex items-center justify-center shadow-lg">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-[10px] font-bold text-white flex items-center justify-center shadow-sm">
                     {totalItems > 9 ? '9+' : totalItems}
                   </span>
                 )}

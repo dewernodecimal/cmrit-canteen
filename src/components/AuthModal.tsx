@@ -42,16 +42,16 @@ export default function AuthModal({ onClose }: AuthModalProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="w-full max-w-sm glass rounded-2xl border border-white/10 shadow-2xl p-6 animate-slide-up"
+        className="w-full max-w-sm bg-slate-900 border border-slate-800 shadow-2xl rounded-xl p-6 animate-slide-up"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
         <div className="flex flex-col items-center text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl gradient-brand flex items-center justify-center shadow-xl shadow-brand-500/20 mb-4">
+          <div className="w-16 h-16 rounded-xl bg-emerald-500 flex items-center justify-center shadow-sm mb-4">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <h2 className="text-2xl font-black text-text-primary tracking-tight">
-            CMRIT <span className="text-brand-500">Bites</span>
+          <h2 className="text-2xl font-black text-white tracking-tight">
+            CMRIT <span className="text-emerald-500">Bites</span>
           </h2>
           <p className="text-sm text-text-secondary mt-1">
             {mode === 'login' ? 'Welcome back! Login to order.' : 'Join the fastest canteen experience.'}
@@ -70,7 +70,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 placeholder="10-digit number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-700 border border-surface-600 text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-500/50 focus:bg-surface-600 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-zinc-400 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-700 transition-all text-base"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 placeholder={mode === 'register' ? 'Min. 4 characters' : 'Enter your password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-surface-700 border border-surface-600 text-text-primary placeholder:text-text-secondary focus:outline-none focus:border-brand-500/50 focus:bg-surface-600 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-zinc-400 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-700 transition-all text-base"
                 required
               />
             </div>
@@ -130,8 +130,8 @@ export default function AuthModal({ onClose }: AuthModalProps) {
             onClick={() => { setMode(mode === 'login' ? 'register' : 'login'); setError(''); }}
             className={`w-full py-3 rounded-xl font-black transition-all ${
               mode === 'login' 
-                ? 'bg-brand-500/10 text-brand-500 border-2 border-brand-500/50 hover:bg-brand-500/20 hover:border-brand-500 shadow-lg' 
-                : 'text-text-secondary hover:text-text-primary underline'
+                ? 'bg-emerald-500/10 text-emerald-500 border-2 border-emerald-500/50 hover:bg-emerald-500/20 hover:border-emerald-500 shadow-sm' 
+                : 'text-zinc-400 hover:text-white underline'
             }`}
           >
             {mode === 'login' ? 'Create a New Account' : 'Login Here'}

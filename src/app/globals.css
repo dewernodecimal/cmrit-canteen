@@ -5,41 +5,32 @@
    ============================================================ */
 
 @theme {
-  /* Brand Colors (Reference Orange) */
-  --color-brand-50: #fff7ed;
-  --color-brand-100: #ffedd5;
-  --color-brand-200: #fed7aa;
-  --color-brand-300: #fdba74;
-  --color-brand-400: #fb923c;
-  --color-brand-500: #EF7E4E; 
-  --color-brand-600: #d96636;
-  --color-brand-700: #b34b28;
+  /* Brand Colors (Emerald) */
+  --color-brand-50: var(--color-emerald-50);
+  --color-brand-100: var(--color-emerald-100);
+  --color-brand-200: var(--color-emerald-200);
+  --color-brand-300: var(--color-emerald-300);
+  --color-brand-400: var(--color-emerald-400);
+  --color-brand-500: var(--color-emerald-500); 
+  --color-brand-600: var(--color-emerald-600);
+  --color-brand-700: var(--color-emerald-700);
 
-  /* Surface Colors */
-  --color-surface-900: #FEF9F5;
-  --color-surface-800: #FFFFFF;
-  --color-surface-700: #F3F1EF;
-  --color-surface-600: #E7E4E1;
-  --color-surface-500: #D8D4D0;
+  /* Surface Colors (Slate) */
+  --color-surface-900: var(--color-slate-950);
+  --color-surface-800: var(--color-slate-900);
+  --color-surface-700: var(--color-slate-800);
+  --color-surface-600: var(--color-slate-700);
+  --color-surface-500: var(--color-slate-600);
 
   /* Typography */
-  --color-text-primary: #2D2D2D;
-  --color-text-secondary: #6B6B6B;
-
+  --color-text-primary: var(--color-white);
+  --color-text-secondary: var(--color-zinc-400);
 
   /* Radius */
-  --radius-card: 1.5rem;
-  --radius-button: 1.125rem;
+  --radius-card: 0.75rem; /* rounded-xl */
+  --radius-button: 0.5rem; /* rounded-lg */
   --radius-badge: 9999px;
-
-  /* Shadows (Soft & Airy) */
-  --shadow-glow: 0 8px 30px rgba(239, 126, 78, 0.15);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.04);
-  --shadow-elevated: 0 12px 50px rgba(0, 0, 0, 0.08);
 }
-
-
-
 
 /* ============================================================
    Base Styles
@@ -47,7 +38,7 @@
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--color-surface-500) transparent;
+  scrollbar-color: var(--color-surface-600) transparent;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -68,29 +59,28 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-500);
+  background: var(--color-surface-600);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-surface-400);
+  background: var(--color-surface-500);
 }
 
 :root {
-  --surface-900: #FEF9F5; /* Soft Cream Background */
-  --surface-800: #FFFFFF; /* Pure Surface */
-  --surface-700: #F3F1EF; /* Subtle Grey-Beige */
-  --surface-600: #E7E4E1;
-  --surface-500: #D8D4D0;
-  --text-primary: #2D2D2D; /* Deep Charcoal */
-  --text-secondary: #6B6B6B; /* Medium Grey */
-  --border-color: rgba(0, 0, 0, 0.05);
-  --glass-bg: rgba(255, 255, 255, 0.85);
+  --surface-900: var(--color-slate-950);
+  --surface-800: var(--color-slate-900);
+  --surface-700: var(--color-slate-800);
+  --surface-600: var(--color-slate-700);
+  --surface-500: var(--color-slate-600);
+  --text-primary: #ffffff;
+  --text-secondary: var(--color-zinc-400);
+  --border-color: var(--color-slate-800);
 }
 
 html {
   scroll-behavior: smooth;
-  color-scheme: light; /* Force browser to light mode */
+  color-scheme: dark; /* Force browser to dark mode */
 }
 
 body {
@@ -99,30 +89,13 @@ body {
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }
 
+h1, h2, h3, h4 {
+  letter-spacing: -0.025em; /* tracking-tight */
+}
+
 /* ============================================================
    Utility Classes
    ============================================================ */
-
-.glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-color);
-  box-shadow: var(--shadow-card);
-}
-
-.glass-light {
-  background: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.gradient-brand {
-  background: linear-gradient(135deg, var(--color-brand-500), var(--color-brand-600));
-}
 
 .bg-highlight {
   background-color: var(--color-highlight);
@@ -136,22 +109,13 @@ body {
   border-radius: 9999px;
 }
 
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-brand-400), var(--color-brand-300));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-
-
 .animate-shimmer {
   animation: shimmer 2s infinite;
   background: linear-gradient(
     90deg,
-    var(--color-surface-700) 0%,
-    var(--color-surface-600) 50%,
-    var(--color-surface-700) 100%
+    var(--color-surface-800) 0%,
+    var(--color-surface-700) 50%,
+    var(--color-surface-800) 100%
   );
   background-size: 200% 100%;
 }
@@ -171,21 +135,12 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 12px rgba(249, 115, 22, 0.2); }
-  50% { box-shadow: 0 0 24px rgba(249, 115, 22, 0.4); }
-}
-
 .animate-fade-in {
   animation: fade-in 0.3s ease-out forwards;
 }
 
 .animate-slide-up {
   animation: slide-up 0.5s ease-out forwards;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
 }
 
 /* Staggered children animation */
