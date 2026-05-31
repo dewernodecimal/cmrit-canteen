@@ -62,8 +62,14 @@ export default function HomePage() {
               - credit_issued: ₹3,505.50 (manually added)
               - credit_redeemed: ₹2,610.00 (spent on orders))
             */}
-            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-2 mb-2 animate-pulse hover:scale-105 transition-transform duration-300">
-              <span className="text-lg">💰</span> Over ₹6,145+ processed in transaction volume!
+            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-3 gap-y-1 mb-2 animate-pulse hover:scale-[1.02] transition-transform duration-300">
+              <span className="inline-flex items-center gap-1.5">
+                <span className="text-base">💰</span> Over ₹6,145+ in transaction volume
+              </span>
+              <span className="text-emerald-500/30 hidden sm:inline">•</span>
+              <span className="inline-flex items-center gap-1.5">
+                <span className="text-base">👥</span> 98+ hungry students registered
+              </span>
             </div>
             
             {/* Badge */}
