@@ -17,3 +17,6 @@
 
 # Environment configuration templates
 /.env.example @vedug
+
+# Main landing and customer pages
+/src/app/page.tsx @vedug
