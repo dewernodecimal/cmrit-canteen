@@ -32,3 +32,6 @@
 
 # Supabase schema and client definition
 /src/utils/ @vedug
+
+# Static assets and public resources
+/public/ @vedug
