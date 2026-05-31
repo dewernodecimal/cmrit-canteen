@@ -11,3 +11,6 @@
 
 # Common UI components
 /src/components/ @vedug
+
+# Custom React hooks
+/src/hooks/ @vedug
