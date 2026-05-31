@@ -6,6 +6,10 @@ import { ArrowRight, CreditCard, Package, Scan, ShoppingBag } from 'lucide-react
 import Button from '@/components/ui/Button';
 import { useShopStatus } from '@/hooks/useShopStatus';
 
+/**
+ * Interactive steps workflow displaying how to use the canteen web application.
+ * Each step highlights a key feature of the ordering and payment flow.
+ */
 const steps = [
   {
     icon: <Scan className="w-6 h-6" />,
