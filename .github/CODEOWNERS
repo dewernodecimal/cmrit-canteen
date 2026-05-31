@@ -5,3 +5,6 @@
 
 # Staff Dashboard components & routes
 /src/app/staff/ @vedug
+
+# Supabase & API integration routes
+/src/app/api/ @vedug
