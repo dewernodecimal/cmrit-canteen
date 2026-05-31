@@ -60,7 +60,7 @@ export default function HomePage() {
               - Volume: ₹6,145.50 calculated from Supabase transactions log
               - Users: 98 registered profiles in Supabase profiles
             */}
-            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 mb-2 animate-pulse hover:scale-[1.02] transition-transform duration-300">
+            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-4 gap-y-1.5 mb-2 animate-pulse hover:scale-[1.03] transition-transform duration-300">
               <span className="inline-flex items-center gap-1.5">
                 <span className="text-base">💰</span> Over ₹6,145+ in transaction volume
               </span>
