@@ -63,7 +63,7 @@ export default function HomePage() {
               - credit_redeemed: ₹261,000)
             */}
             <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-2 mb-2 animate-pulse hover:scale-105 transition-transform duration-300">
-              <span className="text-lg">💰</span> Over ₹6,14,500+ processed in transaction volume!
+              <span className="text-lg">💰</span> Over ₹6,145+ processed in transaction volume!
             </div>
             
             {/* Badge */}
