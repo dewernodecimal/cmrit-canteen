@@ -22,7 +22,7 @@ export default function FloatingCart() {
 
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 animate-slide-up md:hidden bg-slate-950/90 backdrop-blur-lg border-t border-slate-800/50 p-4 pb-safe shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
+    <div className="fixed bottom-0 left-0 right-0 z-40 animate-slide-up md:hidden bg-slate-950/90 backdrop-blur-lg border-t border-slate-800/50 pt-4 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
       <div className="max-w-md mx-auto">
         <button 
           onClick={() => setIsCartOpen(true)}
