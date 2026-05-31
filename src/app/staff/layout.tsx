@@ -16,6 +16,10 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
 
+  /**
+   * Handles staff PIN authentication with client-side rate limiting.
+   * Restricts attempts to 5 failures before imposing a 60-second cool-down lockout.
+   */
   const handleAuth = async () => {
     const lockUntil = localStorage.getItem('staff_lock_until');
     if (lockUntil && Date.now() < parseInt(lockUntil, 10)) {
