@@ -57,10 +57,10 @@ export default function HomePage() {
             
             {/* 
               Live Transactions Volume Badge 
-              Calculated from Supabase transactions log (Total: ₹614,550+ across:
-              - payment_captured: ₹3,000
-              - credit_issued: ₹350,550
-              - credit_redeemed: ₹261,000)
+              Calculated from Supabase transactions log in Rupees (Total: ₹6,145.50 across:
+              - payment_captured: ₹30.00 (online topups)
+              - credit_issued: ₹3,505.50 (manually added)
+              - credit_redeemed: ₹2,610.00 (spent on orders))
             */}
             <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-2 mb-2 animate-pulse hover:scale-105 transition-transform duration-300">
               <span className="text-lg">💰</span> Over ₹6,145+ processed in transaction volume!
