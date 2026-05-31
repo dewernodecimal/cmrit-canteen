@@ -18,15 +18,15 @@ export async function GET() {
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
     
-    // We sum up 'amount' for all transactions
-    const { data: transactions, error: txnError } = await supabase
-      .from('transactions')
-      .select('amount')
+    // We sum up 'total_amount' for all completed orders
+    const { data: orders, error: txnError } = await supabase
+      .from('orders')
+      .select('total_amount')
       .gte('created_at', twoWeeksAgo.toISOString());
 
     if (txnError) throw txnError;
 
-    const totalVolume = transactions.reduce((sum, txn) => sum + Number(txn.amount), 0);
+    const totalVolume = orders?.reduce((sum, order) => sum + Number(order.total_amount), 0) || 0;
 
     return NextResponse.json({
       users: count || 0,
