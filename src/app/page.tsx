@@ -155,7 +155,7 @@ export default function HomePage() {
             </a>
           </div>
           <p className="text-xs text-text-secondary font-semibold mt-2">
-            Instant Refunds • +91 9148484559
+            Support & Help • +91 9148484559
           </p>
         </div>
       </section>
