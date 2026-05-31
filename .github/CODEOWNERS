@@ -29,3 +29,6 @@
 
 # TypeScript layout definitions
 /src/app/layout.tsx @vedug
+
+# Supabase schema and client definition
+/src/utils/ @vedug
