@@ -2,3 +2,6 @@
 # Each line is a pattern followed by one or more owners
 
 * @vedug
+
+# Staff Dashboard components & routes
+/src/app/staff/ @vedug
