@@ -37,6 +37,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
       });
 
       if (res.ok) {
+        // Clear rate-limiting records on successful login
         setAuthenticated(true);
         sessionStorage.setItem('staff_pin', pin);
         localStorage.removeItem('staff_attempts');
