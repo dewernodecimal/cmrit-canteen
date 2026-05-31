@@ -38,3 +38,6 @@
 
 # Tailwind styling configuration
 /tailwind.config.ts @vedug
+
+# Developer guidelines and specifications
+/AGENTS.md @vedug
