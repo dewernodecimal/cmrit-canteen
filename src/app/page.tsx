@@ -43,6 +43,13 @@ export default function HomePage() {
 
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
           <div className="text-center space-y-6 animate-slide-up">
+            
+            {/* Live Order Ticker */}
+            <div className="bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-4 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-2 mb-2 animate-pulse">
+              <span className="text-lg">🔥</span> 120+ orders served today!
+            </div>
+            
+            <br/>
             {/* Badge */}
             <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider ${
               isActuallyOpen 
@@ -110,6 +117,29 @@ export default function HomePage() {
         </div>
       </section>
 
+
+      {/* Support Section */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
+        <div className="bg-surface-800 border border-brand-500/20 rounded-[var(--radius-card)] p-8 text-center space-y-4 shadow-xl shadow-brand-500/5">
+          <h2 className="text-xl font-bold text-text-primary">Need Help?</h2>
+          <p className="text-text-secondary text-sm">
+            Payment failed? Money deducted but no token? Don't worry! We've got your back.
+          </p>
+          <div className="pt-2">
+            <a 
+              href="https://wa.me/919148484559?text=Hi,%20I%20need%20help%20with%20my%20CMRIT%20Canteen%20order." 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-[#25D366] text-white px-6 py-3 rounded-full font-bold shadow-lg shadow-[#25D366]/20 hover:scale-105 transition-transform"
+            >
+              WhatsApp Support
+            </a>
+          </div>
+          <p className="text-xs text-text-secondary font-semibold mt-2">
+            Instant Refunds • +91 9148484559
+          </p>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-t border-black/5 py-12">
