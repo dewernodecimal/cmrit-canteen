@@ -66,7 +66,6 @@ export default function HomePage() {
               <span className="text-lg">💰</span> Over ₹6,14,500+ processed in transaction volume!
             </div>
             
-            <br/>
             {/* Badge */}
             <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold uppercase tracking-wider ${
               isActuallyOpen 
