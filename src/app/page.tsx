@@ -34,6 +34,13 @@ const steps = [
 ];
 
 
+/**
+ * HomePage Component
+ * 
+ * Renders the primary student-facing landing page for CMRIT Bites.
+ * Features a live kitchen status badge, custom orders ticker, interactive
+ * instructions steps, a support channel widget, and standard footer.
+ */
 export default function HomePage() {
   const { isActuallyOpen } = useShopStatus();
 
