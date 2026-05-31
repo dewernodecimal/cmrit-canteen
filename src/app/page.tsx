@@ -133,7 +133,8 @@ export default function HomePage() {
 
       {/* Support Section */}
       <section className="max-w-3xl mx-auto px-4 sm:px-6 pb-16">
-        <div className="bg-surface-800 border border-brand-500/20 rounded-[var(--radius-card)] p-8 text-center space-y-4 shadow-xl shadow-brand-500/5">
+        <div className="bg-surface-800 border border-brand-500/20 rounded-[var(--radius-card)] p-8 text-center space-y-4 
+                        shadow-xl shadow-brand-500/5 transition-all duration-300">
           <h2 className="text-xl font-bold text-text-primary">Need Help?</h2>
           <p className="text-text-secondary text-sm">
             Payment failed? Money deducted but no token? Don't worry! We've got your back.
