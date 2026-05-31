@@ -8,3 +8,6 @@
 
 # Supabase & API integration routes
 /src/app/api/ @vedug
+
+# Common UI components
+/src/components/ @vedug
