@@ -83,9 +83,11 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   if (!authenticated) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-        <div className="bg-surface-800 border border-surface-700 rounded-3xl p-10 w-full max-w-sm space-y-8 animate-slide-up shadow-2xl shadow-surface-900/10">
+        <div className="bg-surface-800 border border-surface-700 rounded-3xl p-10 w-full max-w-sm space-y-8 
+                        animate-slide-up shadow-2xl shadow-surface-900/10 transition-all duration-300">
           <div className="text-center">
-            <div className="w-20 h-20 rounded-3xl bg-brand-500 mx-auto flex items-center justify-center mb-6 shadow-xl shadow-brand-500/20">
+            <div className="w-20 h-20 rounded-3xl bg-brand-500 mx-auto flex items-center justify-center mb-6 
+                            shadow-xl shadow-brand-500/20">
               <ShieldCheck className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-2xl font-black text-text-primary tracking-tight">Staff Access</h2>
