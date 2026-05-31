@@ -22,11 +22,11 @@ export default function FloatingCart() {
 
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 animate-slide-up md:hidden bg-slate-950/90 backdrop-blur-lg border-t border-slate-800/50 pt-4 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgba(0,0,0,0.3)]">
-      <div className="max-w-md mx-auto">
+    <div className="fixed bottom-6 left-0 right-0 px-4 z-40 animate-slide-up pointer-events-none md:hidden">
+      <div className="max-w-md mx-auto pointer-events-auto">
         <button 
           onClick={() => setIsCartOpen(true)}
-          className="w-full flex items-center justify-between bg-brand-500 text-white p-4 rounded-xl shadow-xl shadow-brand-500/20 active:scale-[0.98] transition-transform group"
+          className="w-full flex items-center justify-between bg-brand-500 text-white p-4 rounded-2xl shadow-2xl shadow-brand-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all group"
         >
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
