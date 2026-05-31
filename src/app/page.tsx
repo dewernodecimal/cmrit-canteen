@@ -55,9 +55,9 @@ export default function HomePage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-16">
           <div className="text-center space-y-6 animate-slide-up">
             
-            {/* Live Order Ticker */}
+            {/* Live Transactions Volume Badge */}
             <div className="bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 px-4 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-2 mb-2 animate-pulse">
-              <span className="text-lg">🔥</span> 120+ orders served today!
+              <span className="text-lg">💰</span> Over ₹6,14,500+ processed in transaction volume!
             </div>
             
             <br/>
