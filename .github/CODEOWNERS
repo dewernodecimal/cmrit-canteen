@@ -20,3 +20,6 @@
 
 # Main landing and customer pages
 /src/app/page.tsx @vedug
+
+# Global typography and styling sheets
+/src/app/globals.css @vedug
