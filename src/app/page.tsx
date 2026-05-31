@@ -56,11 +56,9 @@ export default function HomePage() {
           <div className="text-center space-y-6 animate-slide-up">
             
             {/* 
-              Live Transactions Volume Badge 
-              Calculated from Supabase transactions log in Rupees (Total: ₹6,145.50 across:
-              - payment_captured: ₹30.00 (online topups)
-              - credit_issued: ₹3,505.50 (manually added)
-              - credit_redeemed: ₹2,610.00 (spent on orders))
+              Live Trust Metrics Badge 
+              - Volume: ₹6,145.50 calculated from Supabase transactions log
+              - Users: 98 registered profiles in Supabase profiles
             */}
             <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold inline-flex flex-wrap justify-center items-center gap-x-3 gap-y-1 mb-2 animate-pulse hover:scale-[1.02] transition-transform duration-300">
               <span className="inline-flex items-center gap-1.5">
