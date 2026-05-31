@@ -14,3 +14,6 @@
 
 # Custom React hooks
 /src/hooks/ @vedug
+
+# Environment configuration templates
+/.env.example @vedug
