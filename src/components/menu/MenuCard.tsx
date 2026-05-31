@@ -19,6 +19,7 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
   const isSoldOut = !item.is_available || item.current_stock <= 0;
   const isHighDemand = demandCount >= 10;
   const canOrder = isShopOpen && !isSoldOut;
+  const isNonVeg = /chicken|egg|mutton|fish/i.test(item.name) || /chicken|egg|mutton|fish/i.test(item.description || '');
 
   return (
     <div
@@ -38,9 +39,13 @@ export default function MenuCard({ item, demandCount = 0, isShopOpen = true }: M
       {/* Content Section (Left) */}
       <div className="flex-1 flex flex-col pt-1">
         <div className="flex items-center gap-2 mb-1">
-          {/* Veg/Non-Veg Indicator (mocking with a simple square/circle SVG) */}
-          <div className="w-3.5 h-3.5 rounded-sm border-2 border-emerald-500 flex items-center justify-center shrink-0">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          {/* Veg/Non-Veg Indicator */}
+          <div className={`w-3.5 h-3.5 rounded-sm border-2 flex items-center justify-center shrink-0 ${isNonVeg ? 'border-red-600' : 'border-emerald-500'}`}>
+            {isNonVeg ? (
+              <div className="w-0 h-0 border-l-[3px] border-l-transparent border-r-[3px] border-r-transparent border-b-[5px] border-b-red-600 mb-0.5" />
+            ) : (
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            )}
           </div>
           {isHighDemand && !isSoldOut && (
             <span className="text-[10px] font-black text-emerald-500 tracking-tighter uppercase bg-emerald-500/10 px-1.5 py-0.5 rounded">
