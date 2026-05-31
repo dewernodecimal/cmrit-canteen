@@ -59,7 +59,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         </div>
 
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-y-5">
           {/* Phone */}
           <div>
             <label className="block text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">Phone Number</label>
@@ -70,7 +70,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 placeholder="10-digit number"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, '').slice(0, 10))}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-zinc-400 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-700 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-900 border-2 border-slate-800 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 focus:bg-slate-950 transition-all text-base"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
                 placeholder={mode === 'register' ? 'Min. 4 characters' : 'Enter your password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder:text-zinc-400 focus:outline-none focus:border-emerald-500/50 focus:bg-slate-700 transition-all text-base"
+                className="w-full h-12 pl-12 pr-4 rounded-xl bg-slate-900 border-2 border-slate-800 text-white placeholder:text-zinc-500 focus:outline-none focus:border-emerald-500 focus:bg-slate-950 transition-all text-base"
                 required
               />
             </div>
@@ -121,7 +121,7 @@ export default function AuthModal({ onClose }: AuthModalProps) {
         </form>
 
         {/* Toggle mode */}
-        <div className="mt-6 pt-6 border-t border-surface-600 flex flex-col items-center gap-3">
+        <div className="mt-8 pt-8 border-t border-slate-800 flex flex-col items-center gap-y-4">
           <p className="text-sm font-medium text-text-secondary">
             {mode === 'login' ? "New to CMRIT Bites?" : 'Already have an account?'}
           </p>
