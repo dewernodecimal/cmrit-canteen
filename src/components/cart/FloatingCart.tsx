@@ -16,6 +16,7 @@ export default function FloatingCart() {
     !isLoggedIn ||
     totalItems === 0 ||
     isCartOpen ||
+    pathname === '/' ||
     pathname === '/cart' ||
     pathname.startsWith('/order') ||
     pathname.startsWith('/staff')

@@ -12,7 +12,10 @@ export async function GET(req: NextRequest) {
 
     const supabase = createAdminClient();
 
-    // Fetch all transactions from the beginning
+    const twoWeeksAgo = new Date();
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
+
+    // Fetch transactions for the past 2 weeks
     const { data, error } = await supabase
       .from('transactions')
       .select(`
@@ -24,6 +27,7 @@ export async function GET(req: NextRequest) {
         created_at,
         order_id
       `)
+      .gte('created_at', twoWeeksAgo.toISOString())
       .order('created_at', { ascending: false });
 
     if (error) throw error;
