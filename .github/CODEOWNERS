@@ -23,3 +23,6 @@
 
 # Global typography and styling sheets
 /src/app/globals.css @vedug
+
+# Next.js and package configuration files
+/package.json @vedug
