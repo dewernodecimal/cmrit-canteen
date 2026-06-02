@@ -71,8 +71,6 @@ export function useOrders(phone: string | null) {
               toast.error('Order cancelled by canteen. Credits refunded.');
             } else if (payload.new.status === 'ready') {
               toast.success('Your order is ready for pickup!');
-            } else if (payload.new.status === 'completed') {
-              toast.success('Order collected! Enjoy your meal! 😋');
             }
             
             setOrders((prev) =>
@@ -93,39 +91,6 @@ export function useOrders(phone: string | null) {
   }, [phone]);
 
   return { orders, isLoading, refetch: fetchOrders };
-}
-
-// Lightweight hook — only fetches count of ongoing orders (used in Navbar)
-export function useOngoingOrdersCount(phone: string | null): number {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!phone) { setCount(0); return; }
-
-    const supabase = createClient();
-    const fetchCount = async () => {
-      const { data } = await supabase
-        .from('orders')
-        .select('id, status')
-        .eq('phone', phone)
-        .in('status', ['pending_payment', 'awaiting_verification', 'confirmed', 'in_progress', 'ready']);
-      setCount(data?.length ?? 0);
-    };
-
-    fetchCount();
-
-    const channelId = `navbar-orders-${phone}-${Math.random().toString(36).substring(7)}`;
-    const channel = supabase
-      .channel(channelId)
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders', filter: `phone=eq.${phone}` },
-        () => { fetchCount(); }
-      )
-      .subscribe();
-
-    return () => { supabase.removeChannel(channel); };
-  }, [phone]);
-
-  return count;
 }
 
 // Fetch a single order by ID
@@ -180,10 +145,10 @@ export function useOrder(orderId: string) {
       )
       .subscribe();
 
-    // Fallback polling (every 4 seconds) just in case WebSockets fail
+    // Fallback polling (every 5 seconds) just in case WebSockets fail
     const pollInterval = setInterval(() => {
       fetchOrder();
-    }, 4000);
+    }, 5000);
 
     return () => {
       supabase.removeChannel(channel);
