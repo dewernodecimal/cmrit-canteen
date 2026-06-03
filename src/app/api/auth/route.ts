@@ -105,7 +105,8 @@ export async function POST(req: NextRequest) {
         .single();
 
       if (!profile) {
-        return NextResponse.json({ error: 'No account found. Please register first.' }, { status: 400 });
+        // Issue 5 fix: generic error to prevent phone enumeration
+        return NextResponse.json({ error: 'Invalid credentials.' }, { status: 401 });
       }
       if (!profile.password_hash) {
         return NextResponse.json({ error: 'Account not set up. Please register a password.' }, { status: 400 });
@@ -133,8 +134,9 @@ export async function POST(req: NextRequest) {
       }
 
       if (!passwordMatches) {
+        // Issue 5 fix: generic error, don't reveal remaining attempts count
         return NextResponse.json(
-          { error: `Incorrect password. ${remaining} attempt(s) remaining.` },
+          { error: 'Invalid credentials.' },
           { status: 401 }
         );
       }
