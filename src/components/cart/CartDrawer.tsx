@@ -47,11 +47,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     setError('');
 
     try {
+      // Issue 3 fix: send password so server can verify the caller owns this phone
+      const password = sessionStorage.getItem('__pw') ?? '';
+
       const res = await fetch('/api/orders/create', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           phone,
+          password,
           items: items.map((i) => ({
             menu_item_id: i.menuItem.id,
             quantity: i.quantity,
@@ -65,25 +69,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         throw new Error(data.error || 'Failed to create order');
       }
 
-      try {
-        const topic = process.env.NEXT_PUBLIC_NTFY_TOPIC || 'cmritcanteen';
-        const host = window.location.host;
-        const protocol = window.location.protocol;
-        const clickUrl = `${protocol}//${host}/staff`;
-        
-        await fetch(`https://ntfy.sh/${topic}`, {
-          method: 'POST',
-          body: `\ud83c\udf7d\ufe0f New Order Received!\nItems: ${data.items_summary}\nTotal: \u20b9${data.total_amount}\nCollection Code: ${data.collection_code}`,
-          headers: {
-            'Title': 'New Order Received!',
-            'Priority': 'high',
-            'Tags': 'tada,shopping_cart,bell',
-            'Click': clickUrl,
-          },
-        });
-      } catch (err) {
-        console.error('Client ntfy push failed:', err);
-      }
+      // Issue 6 fix: ntfy notification is now sent server-side (removed client-side push)
+      // The server sends it via a private NTFY_TOPIC env var not exposed to the browser.
 
       await refreshCredits();
       clearCart();
