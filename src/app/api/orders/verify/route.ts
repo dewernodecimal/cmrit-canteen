@@ -1,13 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export async function POST(req: NextRequest) {
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
+
   try {
-    // Verify staff PIN
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const { order_id, action } = await req.json();
 
