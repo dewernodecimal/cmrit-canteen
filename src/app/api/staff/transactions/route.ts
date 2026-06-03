@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
-  try {
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Issue 1 fix: rate-limited, timing-safe PIN check
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
 
+  try {
     const supabase = createAdminClient();
 
     const twoWeeksAgo = new Date();

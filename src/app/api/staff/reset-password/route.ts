@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 async function stretchPassword(password: string, salt: string): Promise<string> {
   const encoder = new TextEncoder();
@@ -23,16 +24,14 @@ function generateSalt(): string {
 }
 
 export async function POST(req: NextRequest) {
-  try {
-    // 1. Verify staff PIN
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Issue 1 fix: rate-limited, timing-safe PIN check
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
 
+  try {
     const { phone, new_password } = await req.json();
 
-    // 2. Validate input
+    // Validate input
     if (!phone || !/^\d{10}$/.test(phone)) {
       return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
     }
@@ -53,11 +52,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'No account found for this phone number' }, { status: 404 });
     }
 
-    // 3. Hash the new password with a fresh unique salt using PBKDF2
+    // Hash the new password with a fresh unique salt using PBKDF2
     const salt = generateSalt();
     const passwordHash = await stretchPassword(new_password, salt);
 
-    // 4. Update password in the database
+    // Update password in the database
     const { error } = await supabase
       .from('profiles')
       .update({ password_hash: `pbkdf2:${salt}:${passwordHash}` })
