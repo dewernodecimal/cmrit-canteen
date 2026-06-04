@@ -5,6 +5,7 @@
 
 import { checkRateLimit } from '@/lib/rateLimit';
 import { NextRequest, NextResponse } from 'next/server';
+import { timingSafeEqual } from 'crypto';
 
 /**
  * Verifies the `x-staff-pin` header using:
@@ -42,7 +43,7 @@ export function verifyStaffPin(req: NextRequest): NextResponse | null {
 
   let match = false;
   try {
-    match = require('crypto').timingSafeEqual(a, b) && pin.length === expected.length;
+    match = timingSafeEqual(a, b) && pin.length === expected.length;
   } catch {
     match = false;
   }

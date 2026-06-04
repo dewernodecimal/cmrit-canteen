@@ -23,7 +23,10 @@ export default function WalletPage() {
     if (!phone) return;
     setIsLoading(true);
     try {
-      const res = await fetch(`/api/credits?phone=${phone}&history=true`);
+      const pw = sessionStorage.getItem('__pw') ?? '';
+      const res = await fetch(`/api/credits?phone=${phone}&history=true`, {
+        headers: pw ? { 'x-password': pw } : {},
+      });
       if (res.ok) {
         const data = await res.json();
         setTransactions(data.transactions || []);

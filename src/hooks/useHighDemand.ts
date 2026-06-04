@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { HIGH_DEMAND_THRESHOLD } from '@/lib/constants';
 
 // Returns a map of menu_item_id → count of pending/in-progress orders
 export function useHighDemand() {

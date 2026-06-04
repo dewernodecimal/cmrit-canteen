@@ -77,5 +77,7 @@ export function formatPrice(paise: number): string {
 
 // Generate a random 4-digit collection code
 export function generateCollectionCode(): string {
-  return Math.floor(1000 + Math.random() * 9000).toString();
+  const array = new Uint32Array(1);
+  globalThis.crypto.getRandomValues(array);
+  return (1000 + (array[0] % 9000)).toString();
 }

@@ -12,7 +12,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import toast from 'react-hot-toast';
-import type { Order, OrderWithItems } from '@/types';
+import type { OrderWithItems } from '@/types';
 
 export function useOrders(phone: string | null) {
   const [orders, setOrders] = useState<OrderWithItems[]>([]);
@@ -90,7 +90,7 @@ export function useOrder(orderId: string) {
   useEffect(() => {
     const supabase = createClient();
     
-    const channelId = `order-${orderId}-${Math.random().toString(36).substring(7)}`;
+    const channelId = `order-${orderId}-${globalThis.crypto.randomUUID()}`;
     const channel = supabase
       .channel(channelId)
       .on(
