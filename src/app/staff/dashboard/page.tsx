@@ -194,7 +194,7 @@ export default function StaffDashboard() {
     
     // 2. Perform the actual API call in the background
     try {
-      await fetch('/api/orders', {
+      const res = await fetch('/api/orders', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -206,9 +206,14 @@ export default function StaffDashboard() {
           cancel_reason: cancelReason,
         }),
       });
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to update order status');
+      }
       // No need to fetchOrders() here, Supabase Realtime will catch it if needed.
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to update order:', err);
+      alert(`Error updating order: ${err.message || 'Unknown error'}`);
       fetchOrders(); // Revert on failure
     }
   };
@@ -549,13 +554,13 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
   const timeSince = getTimeSince(new Date(order.created_at));
 
   return (
-    <Card padding="sm" className="animate-fade-in border-surface-700 shadow-sm hover:shadow-md transition-shadow">
+    <Card padding="none" className="p-3 animate-fade-in border-zinc-900 bg-zinc-950 shadow-sm hover:border-zinc-800 transition-colors">
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 border-b border-surface-700 pb-3">
+      <div className="flex items-start justify-between mb-3 border-b border-zinc-900 pb-3">
         <div>
           {order.collection_code && order.status !== 'awaiting_verification' && (
-            <div className="text-3xl font-black text-text-primary mb-1 tracking-tighter">
-              #{order.collection_code}
+            <div className="text-5xl font-black text-white mb-0.5 tracking-tighter leading-none">
+              {order.collection_code}
             </div>
           )}
           {order.status === 'awaiting_verification' && order.utr_number && (
@@ -563,22 +568,22 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
               UTR: {order.utr_number}
             </div>
           )}
-          <p className="text-[10px] text-text-secondary font-bold uppercase tracking-widest">
+          <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mt-1.5">
             {order.phone} · {timeSince}
           </p>
         </div>
-        <Badge variant="info" className="font-black">{formatPrice(order.total_amount)}</Badge>
+        <Badge variant="info" className="font-black bg-zinc-900 border-none text-zinc-300">{formatPrice(order.total_amount)}</Badge>
       </div>
 
       {/* Items */}
-      <div className="space-y-2 mb-5 px-1">
+      <div className="space-y-2 mb-4 px-1">
         {order.order_items.map((item) => (
           <div
             key={item.id}
             className="flex items-center justify-between text-sm"
           >
-            <span className="text-text-primary font-bold">
-              <span className="text-brand-600 font-black">{item.quantity}×</span> {item.item_name}
+            <span className="text-white font-extrabold tracking-tight">
+              <span className="text-emerald-500 mr-1.5">{item.quantity}×</span> {item.item_name}
             </span>
           </div>
         ))}
@@ -590,7 +595,7 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
           <Button
             key={idx}
             variant={actionBtn.variant}
-            size="sm"
+            size="lg"
             icon={actionBtn.icon}
             onClick={() => {
               if (actionBtn.action && onVerify) {
@@ -606,7 +611,7 @@ function OrderCard({ order, actions, onAction, onVerify, isUpdating }: OrderCard
               }
             }}
             isLoading={isUpdating}
-            className="flex-1 font-black uppercase tracking-tighter text-[10px] h-9"
+            className="flex-1 font-extrabold uppercase tracking-tight text-xs h-12"
           >
             {actionBtn.label}
           </Button>

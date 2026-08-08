@@ -96,18 +96,19 @@ export interface CartState {
 // API Types
 // ============================================================
 
+// CreateOrderPayload and CreateOrderResponse for Razorpay removed.
+// The credit-based order system uses POST /api/orders/create with {phone, password, items}.
 export interface CreateOrderPayload {
   phone: string;
+  password: string; // Issue 3 fix: caller must prove ownership
   items: { menu_item_id: string; quantity: number }[];
-  use_credits: boolean;
 }
 
 export interface CreateOrderResponse {
   order_id: string;
-  razorpay_order_id: string;
-  amount_to_pay: number; // paise (after credits)
-  credits_applied: number;
-  key_id: string;
+  collection_code: string;
+  total_amount: number; // paise
+  items_summary: string;
 }
 
 export interface OrderWithItems extends Order {

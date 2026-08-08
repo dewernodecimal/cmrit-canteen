@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect, type ReactNode } from 'react';
-import { usePathname } from 'next/navigation';
-import { ShieldCheck, LayoutDashboard, Package, LogOut } from 'lucide-react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useEffect, useState, type ReactNode } from 'react';
+import { LayoutDashboard, LogOut, Package, ShieldCheck } from 'lucide-react';
+
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 
@@ -15,7 +16,18 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(false);
   const pathname = usePathname();
 
+  /**
+   * Handles staff PIN authentication with client-side rate limiting.
+   * Restricts attempts to 5 failures before imposing a 60-second cool-down lockout.
+   */
   const handleAuth = async () => {
+    const lockUntil = localStorage.getItem('staff_lock_until');
+    if (lockUntil && Date.now() < parseInt(lockUntil, 10)) {
+      const remainingSeconds = Math.ceil((parseInt(lockUntil, 10) - Date.now()) / 1000);
+      setError(`Too many attempts. Try again in ${remainingSeconds}s.`);
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -25,10 +37,22 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
       });
 
       if (res.ok) {
+        // Clear rate-limiting records on successful login
         setAuthenticated(true);
         sessionStorage.setItem('staff_pin', pin);
+        localStorage.removeItem('staff_attempts');
+        localStorage.removeItem('staff_lock_until');
       } else {
-        setError('Invalid PIN');
+        const attempts = parseInt(localStorage.getItem('staff_attempts') || '0', 10) + 1;
+        if (attempts >= 5) {
+          const lockTime = Date.now() + 60 * 1000; // 1 minute lockout
+          localStorage.setItem('staff_lock_until', lockTime.toString());
+          localStorage.setItem('staff_attempts', '0');
+          setError('Too many attempts. Try again in 60s.');
+        } else {
+          localStorage.setItem('staff_attempts', attempts.toString());
+          setError(`Invalid PIN. ${5 - attempts} attempts remaining.`);
+        }
       }
     } catch {
       setError('Connection error');
@@ -51,7 +75,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   if (isChecking) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-brand-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -59,9 +83,11 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   if (!authenticated) {
     return (
       <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4">
-        <div className="bg-surface-800 border border-surface-700 rounded-3xl p-10 w-full max-w-sm space-y-8 animate-slide-up shadow-2xl shadow-surface-900/10">
+        <div className="bg-slate-900 border border-slate-800 rounded-xl p-10 w-full max-w-sm space-y-8 
+                        animate-slide-up shadow-2xl transition-all duration-300">
           <div className="text-center">
-            <div className="w-20 h-20 rounded-3xl bg-brand-500 mx-auto flex items-center justify-center mb-6 shadow-xl shadow-brand-500/20">
+            <div className="w-20 h-20 rounded-xl bg-emerald-500 mx-auto flex items-center justify-center mb-6 
+                            shadow-sm">
               <ShieldCheck className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-2xl font-black text-text-primary tracking-tight">Staff Access</h2>
@@ -81,7 +107,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
 
           <Button
             size="lg"
-            className="w-full shadow-lg shadow-brand-500/20"
+            className="w-full shadow-sm"
             onClick={handleAuth}
             isLoading={loading}
           >
@@ -93,16 +119,16 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex bg-surface-900">
+    <div className="min-h-[calc(100vh-4rem)] flex bg-slate-950">
       {/* Sidebar */}
-      <aside className="w-64 shrink-0 bg-surface-800 border-r border-surface-700 p-6 hidden sm:flex flex-col shadow-sm">
+      <aside className="w-64 shrink-0 bg-slate-900 border-r border-slate-800 p-6 hidden sm:flex flex-col">
         <div className="space-y-2 flex-1">
           <Link
             href="/staff/dashboard"
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
               pathname === '/staff/dashboard'
-                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
-                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
+                ? 'bg-emerald-500 text-white shadow-sm scale-[1.02]'
+                : 'text-zinc-400 hover:text-white hover:bg-slate-800'
             }`}
           >
             <LayoutDashboard className="w-4 h-4" />
@@ -110,10 +136,10 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link
             href="/staff/inventory"
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
               pathname === '/staff/inventory'
-                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
-                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
+                ? 'bg-emerald-500 text-white shadow-sm scale-[1.02]'
+                : 'text-zinc-400 hover:text-white hover:bg-slate-800'
             }`}
           >
             <Package className="w-4 h-4" />
@@ -121,10 +147,10 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
           </Link>
           <Link
             href="/staff/transactions"
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-black uppercase tracking-widest transition-all ${
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all ${
               pathname === '/staff/transactions'
-                ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/20 scale-[1.02]'
-                : 'text-text-secondary hover:text-text-primary hover:bg-surface-700'
+                ? 'bg-emerald-500 text-white shadow-sm scale-[1.02]'
+                : 'text-zinc-400 hover:text-white hover:bg-slate-800'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
@@ -138,7 +164,7 @@ export default function StaffLayout({ children }: { children: ReactNode }) {
             setPin('');
             sessionStorage.removeItem('staff_pin');
           }}
-          className="flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-bold text-text-secondary hover:text-rose-600 hover:bg-rose-50 transition-all cursor-pointer mt-auto"
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 transition-all cursor-pointer mt-auto"
         >
           <LogOut className="w-4 h-4" />
           Logout

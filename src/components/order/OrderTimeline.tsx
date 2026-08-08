@@ -8,7 +8,7 @@ interface OrderTimelineProps {
 
 const steps: { status: OrderStatus; icon: React.ReactNode; label: string }[] = [
   { status: 'awaiting_verification', icon: <CreditCard className="w-4 h-4" />, label: 'Verifying' },
-  { status: 'confirmed', icon: <Clock className="w-4 h-4" />, label: 'Confirmed' },
+  { status: 'confirmed', icon: <Clock className="w-4 h-4" />, label: 'Order Placed' },
   { status: 'in_progress', icon: <ChefHat className="w-4 h-4" />, label: 'Preparing' },
   { status: 'ready', icon: <Package className="w-4 h-4" />, label: 'Ready' },
   { status: 'completed', icon: <CheckCircle2 className="w-4 h-4" />, label: 'Collected' },
@@ -42,8 +42,8 @@ export default function OrderTimeline({ currentStatus }: OrderTimelineProps) {
   return (
     <div className="flex items-center justify-between w-full">
       {steps.map((step, idx) => {
-        const isCompleted = idx < currentIdx;
-        const isCurrent = idx === currentIdx;
+        const isCompleted = currentStatus === 'completed' ? idx <= currentIdx : idx < currentIdx;
+        const isCurrent = currentStatus === 'completed' ? false : idx === currentIdx;
         const isPending = idx > currentIdx;
 
         return (

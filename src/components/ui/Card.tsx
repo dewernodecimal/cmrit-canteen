@@ -21,9 +21,9 @@ export default function Card({
   return (
     <div
       className={`
-        glass rounded-[var(--radius-card)] shadow-[var(--shadow-card)]
+        bg-slate-900/50 backdrop-blur-md border border-slate-800 rounded-[var(--radius-card)]
         ${paddingStyles[padding]}
-        ${hover ? 'transition-all duration-300 hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5 hover:border-white/10' : ''}
+        ${hover ? 'transition-all duration-300 hover:-translate-y-0.5 hover:border-slate-700 hover:bg-slate-900/80' : ''}
         ${className}
       `}
     >

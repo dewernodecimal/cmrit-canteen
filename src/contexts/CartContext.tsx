@@ -24,12 +24,15 @@ interface CartContextType {
   updateQuantity: (menuItemId: string, quantity: number) => void;
   clearCart: () => void;
   getItemQuantity: (menuItemId: string) => number;
+  isCartOpen: boolean;
+  setIsCartOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   // Hydrate from localStorage
   useEffect(() => {
@@ -110,6 +113,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         updateQuantity,
         clearCart,
         getItemQuantity,
+        isCartOpen,
+        setIsCartOpen,
       }}
     >
       {children}

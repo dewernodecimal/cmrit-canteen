@@ -1,13 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyPhoneOwnership } from '@/lib/verifyPhone';
+import { checkRateLimit } from '@/lib/rateLimit';
+import { randomInt } from 'crypto';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { phone, items } = body;
+    const { phone, items, password } = body;
 
-    // ── 0. Check if the shop is currently accepting orders ─────────────────────
+    // ── Issue 3 fix: rate-limit order creation per IP ───────────────────────
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+    const { allowed, retryAfterMs } = checkRateLimit(`order:${ip}`);
+    if (!allowed) {
+      return NextResponse.json(
+        { error: `Too many requests. Try again in ${Math.ceil(retryAfterMs / 60000)} minute(s).` },
+        { status: 429 }
+      );
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
+    // Validate phone
+    if (!phone || !/^\d{10}$/.test(phone)) {
+      return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
+    }
+
+    // ── Issue 3 fix: IDOR — verify caller actually owns this phone ───────────
+    if (!password) {
+      return NextResponse.json({ error: 'Authentication required.' }, { status: 401 });
+    }
+    const ownsPhone = await verifyPhoneOwnership(phone, password);
+    if (!ownsPhone) {
+      return NextResponse.json({ error: 'Authentication failed.' }, { status: 401 });
+    }
+    // ────────────────────────────────────────────────────────────────────────
+
+    // Validate items
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return NextResponse.json({ error: 'No items in order' }, { status: 400 });
+    }
+
     const supabasePublic = createAdminClient();
+
+    // ── 0. Check if the shop is currently accepting orders ──────────────────
     const { data: shopSettings } = await supabasePublic
       .from('site_settings')
       .select('value')
@@ -20,17 +55,7 @@ export async function POST(req: NextRequest) {
         { status: 503 }
       );
     }
-    // ───────────────────────────────────────────────────────────────────────────
-
-    // Validate phone
-    if (!phone || !/^\d{10}$/.test(phone)) {
-      return NextResponse.json({ error: 'Invalid phone number' }, { status: 400 });
-    }
-
-    // Validate items
-    if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: 'No items in order' }, { status: 400 });
-    }
+    // ────────────────────────────────────────────────────────────────────────
 
     const supabase = createAdminClient();
 
@@ -87,8 +112,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 4. Create order in DB (Instantly Confirmed)
-    const collectionCode = String(Math.floor(1000 + Math.random() * 9000));
-    
+    // Issue 4 fix: use cryptographically secure random integer instead of Math.random()
+    const collectionCode = String(randomInt(1000, 10000));
+
     const { data: order, error: orderError } = await supabase
       .from('orders')
       .insert({
@@ -129,10 +155,9 @@ export async function POST(req: NextRequest) {
 
     if (rpcError || !result?.success) {
       console.error('Payment error:', rpcError || result?.error);
-      // Rollback: delete the order if payment failed
       await supabase.from('orders').delete().eq('id', order.id);
-      return NextResponse.json({ 
-        error: result?.error || 'Payment failed. Please check your credit balance.' 
+      return NextResponse.json({
+        error: result?.error || 'Payment failed. Please check your credit balance.'
       }, { status: 400 });
     }
 
@@ -140,8 +165,27 @@ export async function POST(req: NextRequest) {
       .map((item: any) => `${item.quantity}x ${item.item_name}`)
       .join(', ');
 
-    // We will let the client side send the push notification to bypass Vercel's shared IP rate limit on ntfy.sh
-    return NextResponse.json({ 
+    // Issue 6 fix: send ntfy notification server-side using PRIVATE env var
+    // (not NEXT_PUBLIC_NTFY_TOPIC which is exposed in the JS bundle)
+    const ntfyTopic = process.env.NTFY_TOPIC;
+    if (ntfyTopic) {
+      try {
+        await fetch(`https://ntfy.sh/${ntfyTopic}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain',
+            'Title': `New Order #${String(order.id).slice(0, 6)} — ${collectionCode}`,
+            'Priority': 'high',
+          },
+          body: `${itemsSummary}\nTotal: ₹${(totalAmount / 100).toFixed(2)} | Code: ${collectionCode}`,
+        });
+      } catch (ntfyErr) {
+        // Non-fatal — don't fail the order if ntfy is down
+        console.error('ntfy notification failed:', ntfyErr);
+      }
+    }
+
+    return NextResponse.json({
       order_id: order.id,
       collection_code: collectionCode,
       total_amount: totalAmount,

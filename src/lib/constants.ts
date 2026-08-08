@@ -63,12 +63,11 @@ export const CATEGORY_CONFIG: Record<
   string,
   { label: string; emoji: string }
 > = {
-  all:               { label: 'All',               emoji: '🍽️' },
-  sandwiches:        { label: 'Sandwiches',         emoji: '🥪' },
-  burgers:           { label: 'Burgers',            emoji: '🍔' },
-  maggi:             { label: 'Maggi',              emoji: '🍜' },
-  milkshakes:        { label: 'Milkshakes & Drinks', emoji: '🥤' },
-  snacks_refreshers: { label: 'Snacks & Refreshers', emoji: '🍟' },
+  all: { label: 'All', emoji: '🍽️' },
+  snacks: { label: 'Snacks', emoji: '🍿' },
+  meals: { label: 'Meals', emoji: '🍛' },
+  beverages: { label: 'Beverages', emoji: '☕' },
+  desserts: { label: 'Desserts', emoji: '🍰' },
 };
 
 // Format paise to rupees display string
@@ -78,5 +77,7 @@ export function formatPrice(paise: number): string {
 
 // Generate a random 4-digit collection code
 export function generateCollectionCode(): string {
-  return Math.floor(1000 + Math.random() * 9000).toString();
+  const array = new Uint32Array(1);
+  globalThis.crypto.getRandomValues(array);
+  return (1000 + (array[0] % 9000)).toString();
 }

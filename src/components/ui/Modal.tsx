@@ -61,7 +61,7 @@ export default function Modal({
       {/* Modal */}
       <div
         className={`
-          relative glass rounded-2xl shadow-[var(--shadow-elevated)]
+          relative bg-slate-900 border border-slate-800 rounded-xl shadow-2xl
           w-full ${sizeStyles[size]} animate-slide-up
         `}
       >

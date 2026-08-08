@@ -3,7 +3,7 @@
 This repository uses custom architecture for its credit-based payment system. Please follow these rules strictly:
 
 ### 1. Atomic Payments
-**NEVER** deduct credits or decrement stock using simple client-side logic. You **MUST** use the `process_credit_payment` RPC function in Supabase. It handles locking and validation to prevent race conditions (e.g., two students buying the last samosa).
+**NEVER** deduct credits or decrement stock using simple client-side logic. You **MUST** use the `process_credit_payment` RPC function in Supabase. It handles locking and validation to prevent race conditions (e.g., two students buying the last samosa). Edge Functions may also be used in the future for webhook processing.
 
 ### 2. Credit Currency
 All monetary values in the database are stored in **Paise** (integers) to avoid floating-point rounding errors. 

@@ -6,7 +6,7 @@
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-**CMRIT Canteen** is a high-performance web application designed to eliminate lunch queues and streamline food service at CMR Institute of Technology. Students can pre-order meals directly from classrooms prior to peak rush hours using an in-app credit wallet system, enabling instant order fulfillment and automated ledger tracking.
+**CMRIT Canteen** is a high-performance web application designed to eliminate lunch queues and automate order management at CMR Institute of Technology. Students can pre-order meals directly from classrooms prior to peak rush hours using an in-app credit wallet system, enabling instant order fulfillment and automated ledger tracking.
 
 ---
 

@@ -65,7 +65,7 @@ export default function MenuGrid({
             <div key={i} className="animate-shimmer h-10 w-24 rounded-full shrink-0" />
           ))}
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
           {[...Array(6)].map((_, i) => (
             <MenuCardSkeleton key={i} />
           ))}
@@ -117,7 +117,7 @@ export default function MenuGrid({
         </div>
       ) : (
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 stagger-children">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 stagger-children">
           {filtered.map((item) => (
             <MenuCard
               key={item.id}

@@ -1,5 +1,6 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient, createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export const dynamic = 'force-dynamic';
 
@@ -19,11 +20,9 @@ export async function GET() {
   }
 }
 
-export async function PATCH(request: Request) {
-  const staffPin = request.headers.get('x-staff-pin');
-  if (staffPin !== process.env.STAFF_PIN) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+export async function PATCH(request: NextRequest) {
+  const authError = verifyStaffPin(request);
+  if (authError) return authError;
 
   try {
     const body = await request.json();

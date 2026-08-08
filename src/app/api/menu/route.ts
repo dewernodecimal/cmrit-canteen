@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export const revalidate = 60; // Revalidate every minute
 
@@ -22,11 +23,10 @@ export async function GET() {
 
 // PATCH: Update menu item (staff only)
 export async function PATCH(req: NextRequest) {
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
+
   try {
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const { id, ...updates } = await req.json();
 
@@ -47,11 +47,10 @@ export async function PATCH(req: NextRequest) {
 
 // POST: Reset all stock to daily cap (staff only)
 export async function POST(req: NextRequest) {
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
+
   try {
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
 
     const { action } = await req.json();
 

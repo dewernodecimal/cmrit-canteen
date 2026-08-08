@@ -1,17 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export const dynamic = 'force-dynamic';
 
 // GET: Fetch all active orders (for staff dashboard)
 export async function GET(req: NextRequest) {
-  try {
-    // Verify staff PIN
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Issue 1 fix: rate-limited, timing-safe PIN check
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
 
+  try {
     const supabase = createAdminClient();
 
     const { data, error } = await supabase
@@ -30,12 +29,11 @@ export async function GET(req: NextRequest) {
 
 // PATCH: Update order status
 export async function PATCH(req: NextRequest) {
-  try {
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Issue 1 fix: rate-limited, timing-safe PIN check
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
 
+  try {
     const { order_id, status, cancel_reason } = await req.json();
 
     const supabase = createAdminClient();

@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
+import { verifyStaffPin } from '@/lib/verifyStaffPin';
 
 export async function POST(req: NextRequest) {
-  try {
-    // Basic auth check (in production, use better auth)
-    const pin = req.headers.get('x-staff-pin');
-    if (pin !== process.env.STAFF_PIN) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+  // Issue 1 fix: rate-limited, timing-safe PIN check
+  const authError = verifyStaffPin(req);
+  if (authError) return authError;
 
+  try {
     const { phone, amount } = await req.json();
 
     if (!phone || !/^\d{10}$/.test(phone)) {

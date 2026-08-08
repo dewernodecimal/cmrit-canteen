@@ -11,7 +11,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <PhoneProvider>
       <CartProvider>
         <Navbar />
-        <main className="flex-1 pb-24">{children}</main>
+        <main className="flex-1 pb-36 md:pb-24">{children}</main>
         <FloatingCart />
         <Toaster 
           position="top-right"
