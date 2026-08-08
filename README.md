@@ -1,70 +1,74 @@
-# 🍽️ CMRIT Canteen — Skip the Queue
+# 🍽️ CMRIT Canteen: Unified Digital Ordering & Wallet System
 
-A modern, high-performance, credit-based ordering system for the CMRIT Canteen. Designed to eliminate long queues and automate payment verification using an in-app wallet system.
+[![Next.js 15](https://img.shields.io/badge/Next.js-15-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![Supabase](https://img.shields.io/badge/Supabase-Database%20%26%20Auth-3FCF8E?logo=supabase&logoColor=white)](https://supabase.com)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38BDF8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![App Screenshot](https://img.shields.io/badge/Status-Live-emerald)
-![Tech Stack](https://img.shields.io/badge/Stack-Next.js%2015%20|%20Supabase%20|%20Tailwind-orange)
+**CMRIT Canteen** is a high-performance web application designed to eliminate lunch queues and streamline food service at CMR Institute of Technology. Students can pre-order meals directly from classrooms prior to peak rush hours using an in-app credit wallet system, enabling instant order fulfillment and automated ledger tracking.
+
+---
 
 ## 🌟 Key Features
 
-### 🛒 Seamless Ordering
-- **Pure Credit System:** No manual UTR verification. Students top up their wallet at the canteen counter and order instantly.
-- **Smart Cart:** Persistent local storage, quantity management, and "Optimistic UI" for instant feedback.
-- **Collection Codes:** Every order generates a secure 4-digit code for quick pick-up.
+* **Pre-Ordering for Peak Hour Elimination**: Allows students to order ahead from classrooms, selecting pick-up time slots to avoid canteen queues.
+* **In-App Digital Wallet**: Seamless credit-based ordering system that bypasses manual payment verification and transaction delays.
+* **Real-Time Order Tracking**: Status pipeline (Placed ➔ In Preparation ➔ Ready for Pickup ➔ Fulfilled) powered by Supabase real-time subscriptions.
+* **Canteen Staff Management Dashboard**: Real-time kitchen display unit (KDU) for canteen staff to update item availability and manage order queues.
+* **Transactional Security**: PostgreSQL RPC functions ensuring strict transactional balance checks and zero double-spend anomalies.
 
-### 🔐 Secure Authentication
-- **Password Protection:** Phone-based login with hashed passwords (SHA-256) to prevent unauthorized credit usage.
-- **Staff Control:** Dedicated staff dashboard for inventory management, stock resets, and wallet top-ups.
+---
 
-### 🎨 Premium Experience
-- **🌗 Theme Toggle:** Smooth transitions between deep dark mode and clean light mode.
-- **🚀 Performance:** Skeleton loaders, edge caching (1-min revalidation), and atomic database transactions.
-- **📱 Mobile First:** Fully responsive glassmorphism UI designed for student smartphones.
+## 🏗️ System Architecture
+
+```mermaid
+graph TD
+    A[Student Mobile/Web UI] --> B[Next.js App Router Frontend]
+    C[Canteen Staff Dashboard] --> B
+    B --> D[Supabase Realtime Engine]
+    D --> E[PostgreSQL Database]
+    E --> F[Atomic Credit Wallet RPCs]
+    D --> G[Order Status Broadcast Channel]
+```
+
+---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js 15 (App Router), React 19, Tailwind CSS
-- **Backend:** Supabase (PostgreSQL, Edge Functions, RPC)
-- **Icons:** Lucide React
-- **Persistence:** LocalStorage & Supabase Realtime
+* **Framework**: Next.js 15 (App Router, Server Components, Server Actions)
+* **Language**: TypeScript
+* **Database & Auth**: Supabase (PostgreSQL, Row Level Security, Realtime Subscriptions)
+* **Styling**: Tailwind CSS
+* **Icons & Components**: Lucide React, Shadcn UI primitives
+
+---
 
 ## 🚀 Getting Started
 
-### 1. Clone & Install
+### Prerequisites
+* Node.js 18.0 or higher
+* npm or pnpm
+
+### Setup & Local Development
 ```bash
-git clone https://github.com/dewernodecimal/CMRIT-Canteen.git
+# Clone repository
+git clone https://github.com/dewernodecimal/cmrit-canteen.git
 cd cmrit-canteen
+
+# Install dependencies
 npm install
-```
 
-### 2. Environment Variables
-Copy `.env.example` to `.env.local` and fill in your Supabase credentials:
-```bash
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-STAFF_PIN=your_4_digit_pin
-```
+# Configure environment variables (.env.local)
+# NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 
-### 3. Database Setup
-Run the SQL migrations found in `/supabase/migrations` in your Supabase SQL Editor:
-1. `001_initial_schema.sql`
-2. `003_auth_and_fixes.sql`
-
-### 4. Run Locally
-```bash
+# Run development server
 npm run dev
 ```
-
-## 🛡️ Architecture Highlights
-
-- **Atomic Payments:** Uses PostgreSQL functions (RPC) to ensure credits are only deducted if the item is in stock.
-- **Error Boundaries:** Global error handling to prevent app crashes during network failures.
-- **Persistence:** Cart and Theme state persist across browser sessions.
-
-## 👨‍💻 Contributing
-
-This project is built with love for the CMRIT community. Feel free to open issues or submit PRs!
+Navigate to `http://localhost:3000` to access the application.
 
 ---
-© 2026 CMRIT Canteen Team
+
+## 📄 License
+Distributed under the MIT License. See `LICENSE` for details.
